@@ -1,6 +1,4 @@
 #include <SIM900i2.h>
-#include <StringBuffer.h>
-#include <StringBufferUtils.h>
 
 /*
  *
@@ -329,9 +327,7 @@ bool SIM900i2::setHttpData(char *requestBody){
 	at->send(buffer);
 	at->sendPM(AT_COMMAND_22);
 	delay(10);
-	bool result = at->readAndCheck("DOWNLOAD\r\n", 5000, 3000);
-	at->flush();
-
+	bool result = at->readAndCheck("DOWNLOAD\r\n", 5000, 5000);
 	if(result) {
 		successProcessing(HTTP_DATA_DOWNLOAD_P1);
 	} else {
@@ -344,8 +340,6 @@ bool SIM900i2::setHttpData(char *requestBody){
 	at->send(AT_END);
 	delay(10);
 	result = at->readAndCheck(AT_OK_RESPONSE, 10000, 5000);
-	at->flush();
-	
 	if(result) {
 		successProcessing(HTTP_DATA_DOWNLOAD_P2);
 	} else {
@@ -356,22 +350,22 @@ bool SIM900i2::setHttpData(char *requestBody){
 }
 
 bool SIM900i2::sendPostRequest(StringBuffer *sb) {
-    return at->sendAndCheckPM(AT_COMMAND_3, sb, "+HTTPACTION:", AT_END, 30000, 10000);
+    return at->sendAndCheckPM(AT_COMMAND_3, sb, "+HTTPACTION:", AT_END, 50000, 10000);
 }
 
 bool SIM900i2::sendGetRequest(StringBuffer *sb) {
-    return at->sendAndCheckPM(AT_COMMAND_4, sb, "+HTTPACTION:", AT_END, 30000, 15000);   
+    return at->sendAndCheckPM(AT_COMMAND_4, sb, "+HTTPACTION:", AT_END, 50000, 15000);   
 }
 
 bool SIM900i2::initHttp() {
     StringBuffer sb = StringBuffer(stringBox);
-    bool result = at->sendAndCheckPM(AT_COMMAND_5, &sb, AT_OK_RESPONSE, NULL, 5000, 3000);
+    bool result = at->sendAndCheckPM(AT_COMMAND_5, &sb, AT_OK_RESPONSE, NULL, 5000, 5000);
         
     if(result) {
         return true;
     } else if(strstr(sb.toString(), "+CME ERROR:")) {
         if(httpTerm()) {
-            if(at->sendAndCheckPM(AT_COMMAND_5, AT_OK_RESPONSE, 5000, 3000)) {
+            if(at->sendAndCheckPM(AT_COMMAND_5, AT_OK_RESPONSE, 5000, 5000)) {
 				return true;      
             }else{
 				return false;
@@ -383,11 +377,11 @@ bool SIM900i2::initHttp() {
 }
 
 bool SIM900i2::httpTerm() {
-    return at->sendAndCheckPM(AT_COMMAND_6, AT_OK_RESPONSE, 5000, 3000);
+    return at->sendAndCheckPM(AT_COMMAND_6, AT_OK_RESPONSE, 5000, 5000);
 }
 
 bool SIM900i2::selectProfile() {
-    return at->sendAndCheckPM(AT_COMMAND_7, AT_OK_RESPONSE, 5000, 3000);
+    return at->sendAndCheckPM(AT_COMMAND_7, AT_OK_RESPONSE, 5000, 5000);
 }
 
 bool SIM900i2::setUrl(char *url) {
@@ -397,8 +391,7 @@ bool SIM900i2::setUrl(char *url) {
     at->send(url);
     at->sendPM(AT_COMMAND_19);
     delay(10);
-    bool result = at->readAndCheck(AT_OK_RESPONSE, 5000, 3000);
-    at->flush();
+    bool result = at->readAndCheck(AT_OK_RESPONSE, 5000, 5000);
     return result;
 }
 
@@ -409,8 +402,7 @@ bool SIM900i2::setHeader(char *header) {
     at->send(header);
     at->sendPM(AT_COMMAND_19);
     delay(10);
-    bool result = at->readAndCheck(AT_OK_RESPONSE, 5000, 3000);
-    at->flush();
+    bool result = at->readAndCheck(AT_OK_RESPONSE, 5000, 5000);
     return result;
 }
 
@@ -461,14 +453,16 @@ bool SIM900i2::isNetworkReady() {
 }
 
 bool SIM900i2::openGPRSConnection() {
-    if(at->sendAndCheckPM(AT_COMMAND_9, "+SAPBR: 1,1", 7000, 5000))
+	StringBuffer sb = StringBuffer(stringBox);
+    bool check = at->sendAndCheckPM(AT_COMMAND_9, &sb, "+SAPBR: 1,1", AT_OK_RESPONSE, 7000, 5000);
+	
+    if(check)
         return true;
 
-    bool result = at->sendAndCheckPM(AT_COMMAND_10, AT_OK_RESPONSE, 7000, 5000);
-    if(result) {
-        StringBuffer sb = StringBuffer(stringBox);
-        bool check = at->sendAndCheckPM(AT_COMMAND_11, &sb, "+SAPBR: 1,1", AT_OK_RESPONSE, 7000, 5000);
-        if(check) {
+    check = at->sendAndCheckPM(AT_COMMAND_10, AT_OK_RESPONSE, 7000, 5000);
+    sb.clear();
+    if(check) {
+        if(at->sendAndCheckPM(AT_COMMAND_9, &sb, "+SAPBR: 1,1", AT_OK_RESPONSE, 7000, 5000)) {
             return true;
         }
     }
@@ -476,11 +470,11 @@ bool SIM900i2::openGPRSConnection() {
 }
 
 bool SIM900i2::enableSSL() {
-    return at->sendAndCheckPM(AT_COMMAND_12, AT_OK_RESPONSE, 5000, 3000);
+    return at->sendAndCheckPM(AT_COMMAND_12, AT_OK_RESPONSE, 5000, 5000);
 }
 
 bool SIM900i2::configAPN() {
-    if(!at->sendAndCheckPM(AT_COMMAND_13, AT_OK_RESPONSE, 5000, 3000))
+    if(!at->sendAndCheckPM(AT_COMMAND_13, AT_OK_RESPONSE, 5000, 5000))
         return false;
     
     // TS
@@ -489,8 +483,7 @@ bool SIM900i2::configAPN() {
     at->send(apn);
     at->sendPM(AT_COMMAND_19);
     delay(10);
-    bool result = at->readAndCheck(AT_OK_RESPONSE, 5000, 3000);
-    at->flush();
+    bool result = at->readAndCheck(AT_OK_RESPONSE, 5000, 5000);
     return result;
 }
 
@@ -546,7 +539,7 @@ bool SIM900i2::prepare() {
 
 void SIM900i2::checkErrors() {
 
-    if(lastError == CHECK_PIN || lastError == POWER_UP) {
+    if(lastError == CHECK_PIN) {
         Serial.println(F("SIM900i2. Can not use SIM900."));
         powerOff();
         return;
@@ -587,7 +580,7 @@ void SIM900i2::reset() {
 
 bool SIM900i2::checkPin() {
     StringBuffer sb = StringBuffer(stringBox);
-    at->sendAndCheckPM(AT_COMMAND_14, &sb, "+CPIN:", AT_OK_RESPONSE, 5000, 3000);
+    at->sendAndCheckPM(AT_COMMAND_14, &sb, "+CPIN:", AT_OK_RESPONSE, 5000, 5000);
 
     if(strstr(sb.toString(), "+CPIN: READY")) {
         return true;
@@ -603,8 +596,7 @@ bool SIM900i2::checkPin() {
 		at->send(AT_END);
 		delay(10);
 		StringBuffer sb1 = StringBuffer(stringBox);
-		bool result = at->readAndCheck(&sb1, AT_OK_RESPONSE, NULL, 5000, 3000);
-		at->flush();
+		bool result = at->readAndCheck(&sb1, AT_OK_RESPONSE, NULL, 5000, 5000);
 		
 		if(!result) {
             return false;
@@ -627,7 +619,8 @@ bool SIM900i2::checkPin() {
 bool SIM900i2::checkNetwork() {
     Serial.println(F("Network search ..."));
     StringBuffer sb = StringBuffer(stringBox);
-    if(at->sendAndCheckPM(AT_COMMAND_15, &sb, "+CREG:", "\r\n", 10000, 7000)) {
+    bool result = at->sendAndCheckPM(AT_COMMAND_15, &sb, "+CREG:", AT_OK_RESPONSE, 10000, 10000);
+    if(result) {
         if( strstr(sb.toString(),"+CREG: 0,1") || strstr(sb.toString(),"+CREG: 0,5") ) {
             return true;
         }
@@ -676,7 +669,7 @@ bool SIM900i2::powerOn() {
     digitalWrite(powerPin,HIGH);
     delay(2000);
     digitalWrite(powerPin,LOW);
-    delay(3000);
+    delay(1000);
 
     if(checkPower()) {
         return true;
@@ -703,6 +696,6 @@ bool SIM900i2::powerOff() {
 }
 
 bool SIM900i2::checkPower() {
-    return at->sendAndCheckPM(AT_COMMAND_1, AT_OK_RESPONSE, 3000, 5000);
+    return at->sendAndCheckPM(AT_COMMAND_1, AT_OK_RESPONSE, 5000, 3000);
 }
 

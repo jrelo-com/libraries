@@ -1,10 +1,10 @@
+#define DEBUG
+
 #pragma once
 #include <Arduino.h>
 #include <SIM.h>
 #include <SimpleTimer.h>
 #include <XUnit.h>
-
-#define DEBUG
 
 class GSMPXUnit : public XUnit {
 

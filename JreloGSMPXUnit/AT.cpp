@@ -1,5 +1,5 @@
 #include <AT.h>
-#include <avr/pgmspace.h>
+
 
 AT::AT(HardwareSerial *hs) {
     this->hs = hs;
@@ -19,7 +19,6 @@ bool AT::sendAndCheckPM(const char *cmd, char *pattern, unsigned long timeout, u
     sendPM(cmd);
     delay(10);
     bool result = readAndCheck(pattern, timeout, chartimeout);
-    flush();
     return result;
 }
 
@@ -28,7 +27,6 @@ bool AT::sendAndCheckPM(const char *cmd, StringBuffer *sb, char *firstPattern, c
     sendPM(cmd);
     delay(10);
     bool result = readAndCheck(sb, firstPattern, secondPattern, timeout, chartimeout);
-    flush();
     return result;
 }
 
@@ -37,7 +35,6 @@ bool AT::sendAndCheck(char *cmd, StringBuffer *sb, char *firstPattern, char *sec
     send(cmd);
     delay(10);
     bool result = readAndCheck(sb, firstPattern, secondPattern, timeout, chartimeout);
-    flush();
     return result;
 }
 
@@ -46,7 +43,6 @@ bool AT::sendAndCheck(char *cmd, char *pattern, unsigned long timeout, unsigned 
     send(cmd);
     delay(10);
     bool result = readAndCheck(pattern, timeout, chartimeout);
-    flush();
     return result;
 }
 
@@ -101,6 +97,9 @@ bool AT::readAndCheck(StringBuffer *sb, char *pattern, char *secondPattern, unsi
 
         while(hs->available()) {
             char c = hs->read();
+#ifdef DEBUG
+            Serial.print(c);
+#endif
 
             if(!sb->append(c)) {
                 Serial.println(F("AT. Append error !"));
@@ -161,7 +160,9 @@ bool AT::readAndCheck(char *pattern, unsigned long timeout, unsigned long charti
         while (hs->available()) {
 
             char c = hs->read();
-
+#ifdef DEBUG
+            Serial.print(c);
+#endif
             lastChar = millis();
             cursor = (pattern[cursor] == c)? ++cursor : 0;
             if(cursor == length) {
@@ -211,7 +212,12 @@ bool AT::readAndCheck(String *str, char *pattern, char *secondPattern, unsigned 
     while(true) {
 
         while(hs->available()) {
+
             char c = hs->read();
+#ifdef DEBUG
+            Serial.print(c);
+#endif
+
             (*str) += (char)c;
 
             lastChar = millis();
@@ -261,22 +267,18 @@ bool AT::readAndCheck(String *str, char *pattern, char *secondPattern, unsigned 
 bool AT::sendAndCheck(char *cmd, String *str, char *firstPattern, char *secondPattern, unsigned long timeout, unsigned long chartimeout) {
     flush();
     send(cmd);
-    delay(25);
+    delay(10);
     bool result = readAndCheck(str, firstPattern, secondPattern, timeout, chartimeout);
-    delay(25);
-    flush();
-    
+
     return result;
 }
 
 bool AT::sendAndCheckPM(const char *cmd, String *str, char *firstPattern, char *secondPattern, unsigned long timeout, unsigned long chartimeout) {
     flush();
     sendPM(cmd);
-    delay(25);
+    delay(10);
     bool result = readAndCheck(str, firstPattern, secondPattern, timeout, chartimeout);
-    delay(25);
-    flush();
-    
+
     return result;
 }
 

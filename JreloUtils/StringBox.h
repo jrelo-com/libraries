@@ -2,7 +2,7 @@
 #include <Arduino.h>
 #include <SimpleTimer.h>
 
-#define DEBUG false
+//~ #define DEBUG
 
 struct Item {
 	int address = 0;

@@ -2,7 +2,7 @@
 #include <Arduino.h>
 #include <StringBox.h>
 
-#define DEBUG true
+//~ #define DEBUG
 
 class StringBuffer {
 

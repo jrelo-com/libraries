@@ -67,7 +67,7 @@ int StringBox::getTicket(int size) {
         return 0;
     }
 
-#if DEBUG
+#ifdef DEBUG
     Serial.print(F("StringBox. New ticket ... "));
     Serial.print(F("Requests "));
     Serial.print(size);
@@ -157,7 +157,7 @@ int StringBox::getTicket(int size) {
     memset(&memory[begin+1], '\0', end - begin - 1);
     countOfTickets++;
 
-#if DEBUG
+#ifdef DEBUG
     Serial.print(F("StringBox. New ticket => "));
     Serial.println(ticketNumber);
 #endif
@@ -173,7 +173,7 @@ void StringBox::defragmentation() {
     if(countOfTickets == 0)
         return;
 
-#if DEBUG
+#ifdef DEBUG
     showMemory();
     Serial.print(F("StringBox. Defragmentation. Tickets => "));
     Serial.println(countOfTickets);
@@ -222,7 +222,7 @@ void StringBox::defragmentation() {
     }
 
 
-#if DEBUG
+#ifdef DEBUG
     showMemory();
 #endif
 
@@ -253,7 +253,7 @@ char* StringBox::getStringByTicket(int ticket) {
  * */
 void StringBox::returnTicket(int ticket) {
 
-#if DEBUG
+#ifdef DEBUG
     Serial.print(F("StringBox. Return ticket => "));
     Serial.println(ticket);
 #endif
@@ -291,7 +291,7 @@ void StringBox::returnTicket(int ticket) {
 
     memset(&memory[begin], '\0', len + 1);
 
-#if DEBUG
+#ifdef DEBUG
     Serial.println(F("StringBox. Return ticket => OK"));
 #endif
 }
@@ -429,7 +429,7 @@ bool StringBox::resizeTicket(int *ticket, int newSize) {
             strcpy(newPartOfMemory, oldPartMemory);
 
             returnTicket(*ticket);
-            *ticket = newTicket; //////////////////////////////////////////////
+            *ticket = newTicket; 
         }
 
     }

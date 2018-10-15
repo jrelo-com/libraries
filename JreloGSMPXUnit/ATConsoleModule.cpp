@@ -1,5 +1,4 @@
 #include <ATConsoleModule.h>
-#include <StringBufferUtils.h>
 
 ATConsoleModule::ATConsoleModule(char *key, SIM900i2 *sim) : Module(key){
 	this->at = sim->getAT();
@@ -60,8 +59,6 @@ void ATConsoleModule::update() {
 		delay(25);
 		at->readAndCheck(&temp, pat.toString(), AT_END, 20000, 15000);
 		pat.clear();
-		delay(25);
-		at->flush();
 		
 		StringBufferUtils::escapeQuotes(&temp, outBuffer);
 

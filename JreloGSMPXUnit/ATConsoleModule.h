@@ -4,6 +4,7 @@
 #include <AT.h>
 #include <StringBuffer.h>
 #include <SIM900i2.h>
+#include <StringBufferUtils.h>
 
 class ATConsoleModule : public Module {
 
