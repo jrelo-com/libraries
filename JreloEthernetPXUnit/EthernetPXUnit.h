@@ -11,7 +11,7 @@ class EthernetPXUnit : public XUnit {
 
     private :
 
-        SimpleTimer requestTimer = SimpleTimer(5000);
+        SimpleTimer requestTimer = SimpleTimer(7500);
         SimpleTimer connectionTimer = SimpleTimer(10000);
         EthernetClient ethernetClient;
 				

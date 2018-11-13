@@ -665,11 +665,11 @@ bool SIM900i2::powerOn() {
     }
 
 	digitalWrite(powerPin,LOW);
-    delay(1000);
+    delay(1100);
     digitalWrite(powerPin,HIGH);
-    delay(2000);
+    delay(2300);
     digitalWrite(powerPin,LOW);
-    delay(1000);
+    delay(500);
 
     if(checkPower()) {
         return true;
@@ -696,6 +696,6 @@ bool SIM900i2::powerOff() {
 }
 
 bool SIM900i2::checkPower() {
-    return at->sendAndCheckPM(AT_COMMAND_1, AT_OK_RESPONSE, 5000, 3000);
+    return at->sendAndCheckPM(AT_COMMAND_1, AT_OK_RESPONSE, 5000, 5000);
 }
 

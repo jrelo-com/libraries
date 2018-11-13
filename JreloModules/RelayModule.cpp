@@ -3,7 +3,6 @@
 RelayModule::RelayModule(char *key, int pin, bool inversion) : Module(key) {
     this->pin = pin;
     this->inversion = inversion;
-    value = false;
 }
 
 void RelayModule::update() {
