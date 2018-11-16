@@ -23,7 +23,7 @@ void EthernetWUnit::prepare() {
     webSocketClient.host = host;
     webSocketClient.connectionPassword = connectionPassword;
 
-    strcpy(this->path, "/ws/unit/");
+    strcpy(this->path, "/api/v1/unit/");
     strcat(this->path, uuid);
     webSocketClient.path = path;
 }

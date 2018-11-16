@@ -8,7 +8,7 @@ class RelaySSModule : public Module {
     private :
 
         int pin;
-        int firstAddress;
+        int address;
         bool value = false;
         bool inversion = true;
         bool init = false;
@@ -18,7 +18,7 @@ class RelaySSModule : public Module {
 
     public :
 
-        RelaySSModule(char *key, int pin, int firstAddressbool, bool inversion = true);
+        RelaySSModule(char *key, int pin, int addressbool, bool inversion = true);
         ~RelaySSModule();
         
         void setValue(bool flag);

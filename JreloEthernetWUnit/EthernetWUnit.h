@@ -17,7 +17,7 @@ class EthernetWUnit : public Unit {
         WebSocketClient webSocketClient;
         EthernetClient ethernetClient;
         
-        char path[46] = {0};
+        char path[51] = {0};
         const char *host = "app.jrelo.com";
         const char *userAgent = "WUnit";
 

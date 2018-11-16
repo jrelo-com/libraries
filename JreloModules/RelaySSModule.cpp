@@ -1,9 +1,9 @@
 #include <RelaySSModule.h>
 
-RelaySSModule::RelaySSModule(char *key, int pin, int firstAddressbool, bool inversion) : Module(key) {
+RelaySSModule::RelaySSModule(char *key, int pin, int addressbool, bool inversion) : Module(key) {
     this->pin = pin;
     this->inversion = inversion;
-    this->firstAddress = firstAddress;
+    this->address = address;
     loadValue();
 }
 
@@ -43,7 +43,7 @@ bool RelaySSModule::getValue() {
 }
 
 void RelaySSModule::loadValue(){
-	byte valueFromMemory = EEPROM.read(this->firstAddress);
+	byte valueFromMemory = EEPROM.read(this->address);
 	if(valueFromMemory == 255){
 		this->value = false;
 		digitalWrite(pin, inversion?!value:value);
@@ -55,8 +55,8 @@ void RelaySSModule::loadValue(){
 
 void RelaySSModule::saveValue(){
 	if(this->value){
-		EEPROM.write(this->firstAddress, 0);
+		EEPROM.write(this->address, 0);
 	} else {
-		EEPROM.write(this->firstAddress, 255);
+		EEPROM.write(this->address, 255);
 	}
 }

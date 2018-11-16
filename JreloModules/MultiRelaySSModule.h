@@ -19,7 +19,7 @@ class MultiRelaySSModule : public Module {
 
     public :
 
-        MultiRelaySSModule(char *key, int *ports, int count, int firstAddress, bool inversion = true);
+        MultiRelaySSModule(char *key, int *ports, int count, int address, bool inversion = true);
         ~MultiRelaySSModule();
         
         bool getValue(int port);
