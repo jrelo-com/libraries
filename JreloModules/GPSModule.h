@@ -8,7 +8,7 @@ class GPSModule : public Module {
 
     private:
 
-        SimpleTimer timer = SimpleTimer(10000);
+        SimpleTimer timer = SimpleTimer(15000);
         TinyGPS *gps = NULL;
         HardwareSerial *serial = NULL;
         void read(unsigned long ms);

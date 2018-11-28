@@ -1,21 +1,21 @@
 #pragma once
 #include <Arduino.h>
 #include <Module.h>
-#include <DHT.h>
+#include <BMP180Wrapper.h>
 #include <SimpleTimer.h>
 #include <TypeConverter.h>
 
-class DHTHumidityModule : public Module {
+class BMP180PressureModule : public Module {
 
     private :
-    
-        DHT *dht = NULL;
+
+        BMP180Wrapper *bmp180 = NULL;
         SimpleTimer timer = SimpleTimer(60000);
 
     public :
-    
-        DHTHumidityModule(char *key, DHT *dht);
-        ~DHTHumidityModule();
+
+        BMP180PressureModule(char *key, BMP180Wrapper *bmp180);
+        ~BMP180PressureModule();
         void inputData(char *data);
         void outputData(Pipe *pipe);
         void update();

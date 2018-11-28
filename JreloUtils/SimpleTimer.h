@@ -8,11 +8,15 @@ class SimpleTimer {
 
     unsigned long lastEvent = 0;
     unsigned long period = 0;
-    bool workFlag = false;
-    bool interval = true;
+    bool workFlag;
+    bool interval;
 
   public :
-    
+    /*
+     * period - time
+     * interval - loop or timer
+     * starFlag - start the timer after creating an instance 
+     * */
     SimpleTimer(unsigned long period, bool interval = true, bool startFlag = true);
     
     ~SimpleTimer() ;

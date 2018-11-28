@@ -9,7 +9,7 @@ class LifetimeModule : public Module {
 
 	private :
 
-		SimpleTimer timer = SimpleTimer(30 * 1000);
+		SimpleTimer timer = SimpleTimer(60000);
 
     public :
 

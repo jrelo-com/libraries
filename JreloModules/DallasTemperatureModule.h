@@ -10,7 +10,7 @@ class DallasTemperatureModule : public Module {
     private :
 
         DallasTemperature *sensors = NULL;
-        SimpleTimer timer = SimpleTimer(10 * 1000);
+        SimpleTimer timer = SimpleTimer(60000);
         int index = 0;
 
     public :

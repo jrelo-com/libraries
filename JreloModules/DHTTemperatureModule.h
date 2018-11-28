@@ -10,7 +10,7 @@ class DHTTemperatureModule : public Module {
     private :
 
         DHT *dht = NULL;
-        SimpleTimer timer = SimpleTimer(10 * 1000);
+        SimpleTimer timer = SimpleTimer(60000);
 
     public :
 
