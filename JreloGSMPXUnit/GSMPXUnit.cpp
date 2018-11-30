@@ -2,72 +2,73 @@
 
 void GSMPXUnit::prepare() {
 	
-	strcpy(this->url, "app.jrelo.com:818");
-	if(sim->isHTTPSUsed())
+    strcpy(this->url, "app.jrelo.com:818");
+    if(simx->isHTTPSUsed()){
 		strcat(this->url, "4");
-	else
+	}else{
 		strcat(this->url, "3");
-	strcat(this->url, "/api/v1/unit/");
-	strcat(this->url, uuid);
-		
-	strcpy(this->header, "UCP: "); // header0: param0\r\nheader1: param1\r\nheader2: param3 
-	strcat(this->header, connectionPassword);
+	}
+    strcat(this->url, "/api/v1/unit/");   
+    strcat(this->url, uuid);
+
+    strcpy(this->headers, "UCP: "); // header0: param0\r\nheader1: param1\r\nheader2: param3
+    strcat(this->headers, connectionPassword);
+    
+    simx->setUrl(this->url);
+    simx->setHeaders(this->headers);
 }
 
 bool GSMPXUnit::getData(StringBuffer *body) {
     bool result = false;
-
-    if(sim->getData(url, header)) {
-        if(sim->getHttpStatusCode() == 200) {
-            body->appendString(sim->getResponseBody()->toString());
-            sim->getResponseBody()->clear();
+	
+	uint16_t responseCode = 0;
+    if(simx->getAction(body, &responseCode)) {	
+        if(responseCode == 200) {
+#ifdef DEBUG
+            Serial.println(body->toString());
+#endif
             result = true;
         }
     } else {
-#ifdef SPEECH
+#ifdef DEBUG
         Serial.println(F("getData - ERROR !"));
 #endif
-        // ??????
     }
-
     return result;
 }
 
 bool GSMPXUnit::postData(char *body) {
-    if(!sim->postData(body, url, header)) {
-#ifdef SPEECH
-		Serial.println(F("postData - ERROR !"));
-#endif
-        // ??????
+	StringBuffer buffer = StringBuffer(&stringBox, body);
+	uint16_t responseCode = 0;
+    if(simx->postAction(&buffer, &responseCode)) {
+		return true;
     }
+#ifdef DEBUG
+        Serial.println(F("postData - ERROR !"));
+#endif
+    return false;
 }
 
-GSMPXUnit::GSMPXUnit(int stringBoxSize, const char *uuid, const char *connectionPassword, SIM *sim) {
-    this->sim = sim;
-    stringBox.init(stringBoxSize);  
-    this->sim->setStringBox(&stringBox);
-    
+GSMPXUnit::GSMPXUnit(uint16_t stringBoxSize, const char *uuid, const char *connectionPassword) {
     this->uuid = uuid;
     this->connectionPassword = connectionPassword;
-    
+    this->stringBox.init(stringBoxSize);  
 }
 
-GSMPXUnit::~GSMPXUnit() {
-    delete sim;
-}
+GSMPXUnit::~GSMPXUnit() {}
 
 void GSMPXUnit::update() {
 
 	stringBox.update();
 
-	if(!prepareUnitFlag){
-		prepare();
-		prepareUnitFlag = true;	
-	}
+    if(!prepareUnitFlag) {
+        prepare();
+        prepareUnitFlag = true;
+    }
 
-	sim->update();
-		
-    if (timer.event())
+    simx->update();
+
+    if (requestTimer.event())
         getRequest();
 
     updateValuesInModules();
@@ -75,6 +76,9 @@ void GSMPXUnit::update() {
 }
 
 bool GSMPXUnit::isReady() {
-    return sim->isReady();
+    return simx->isReady();
 }
 
+void GSMPXUnit::setSIMX(SIMX *simx){
+	this->simx = simx;
+}

@@ -1,11 +1,15 @@
-#pragma once
-//~ #define DEBUG 
+/*
+ * AUTHOR  : vladyslav.hubin.1989@gmail.com
+ * VERSION : 1.0.0
+ * */
 
+#pragma once
 #include <Arduino.h>
 #include <JsonListener.h>
 #include <Module.h>
 #include <LList.h>
 
+//~ #define DEBUG 
 
 #ifdef DEBUG
 	#include <RAM.h>
