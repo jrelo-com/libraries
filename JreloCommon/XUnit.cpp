@@ -1,12 +1,12 @@
 #include <XUnit.h>
 
 void XUnit::executor(char *json) {
-	
+
 #ifdef DEBUG
     Serial.print(F("download. json : "));
     Serial.println(json);
 #endif
-	
+
     UJsonListener listener;
     listener.setModules(modules);
 
@@ -26,21 +26,30 @@ void XUnit::updateValuesInModules() {
 
         if (modules->get(i)->needToApply()) {
             modules->get(i)->applied();
-            
+
             if(modules->get(i)->isFeedback())
-				modules->get(i)->inform();
+                modules->get(i)->inform();
         }
     }
 }
 
 void XUnit::getRequest() {
-	if(!isReady())
-		return;
-	
-    StringBuffer sb = StringBuffer(&stringBox);
-    bool response = getData(&sb);
+    if(!isReady())
+        return;
 
-    if (!response) {
+    StringBuffer sb = StringBuffer(&stringBox);
+    bool result = getData(&sb);
+
+#ifdef DEBUG
+    Serial.print(F("GET data - "));
+    if(result) {
+        Serial.printlnF("Success"));
+    } else {
+        Serial.printlnF("Failure"));
+    }
+#endif
+
+    if (!result) {
         return;
     }
 
@@ -56,21 +65,21 @@ void XUnit::getRequest() {
 }
 
 void XUnit::prepareOutgoingData() {
-	if(!isReady())
-		return;
-	
+    if(!isReady())
+        return;
+
     if (!needToSend())
         return;
 
     bool first = true;
     StringBuffer sb = StringBuffer(&stringBox);
-	StringBufferPipe pipe = StringBufferPipe(&sb); // adapter
-			
+    StringBufferPipe pipe = StringBufferPipe(&sb); // adapter
+
     sb.append('{');
     for (int i = 0; i < modules->size(); i++) {
         if (modules->get(i)->needToInform()) {
 
-			Module *module = modules->get(i);
+            Module *module = modules->get(i);
 
             if (!first) {
                 sb.append(',');
@@ -81,7 +90,7 @@ void XUnit::prepareOutgoingData() {
             sb.append('\"');
             sb.appendString(module->getKey());
             sb.appendString("\":");
-			module->outputData(&pipe);
+            module->outputData(&pipe);
             module->informed();
         }
     }
@@ -95,11 +104,21 @@ void XUnit::prepareOutgoingData() {
 
     if (encryption) {
         char *json  = XXTEAHelper::encryptData(sb.toString(), sb.size(), encryptionPassword);
-        postData(json);
+        sb.clear();
+        sb.appendString(json);
+        sb.trim();
         delete [] json;
-    } else {
-        postData(sb.toString());
     }
+
+    bool result = postData(&sb);
+#ifdef DEBUG
+    Serial.print(F("POST data - "));
+    if(result) {
+        Serial.printlnF("Success"));
+    } else {
+        Serial.printlnF("Failure"));
+    }
+#endif
 }
 
 bool XUnit::needToSend() {
@@ -126,10 +145,10 @@ void XUnit::putModule(Module *module) {
     this->modules->add(module);
 }
 
-XUnit::~XUnit(){
-	delete modules;
+XUnit::~XUnit() {
+    delete modules;
 }
 
-StringBox* XUnit::getStringBox(){
-	return &stringBox;
+StringBox* XUnit::getStringBox() {
+    return &stringBox;
 }

@@ -351,7 +351,6 @@ int StringBox::availableMemory() {
  *
  * */
 bool StringBox::resizeTicket(int *ticket, int newSize) {
-
     if(*ticket == 0 || newSize >= (memoryLength - 3) || newSize < 1)
         return false;
 

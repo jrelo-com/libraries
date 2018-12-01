@@ -27,7 +27,7 @@ class GSMPXUnit : public XUnit {
     protected :
     
         bool getData(StringBuffer *body);
-        bool postData(char *body);
+        bool postData(StringBuffer *body);
 				
     public :
 		

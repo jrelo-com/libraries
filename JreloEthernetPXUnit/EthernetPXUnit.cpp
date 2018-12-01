@@ -45,7 +45,7 @@ bool EthernetPXUnit::getData(StringBuffer *body) {
     return false;
 }
 
-bool EthernetPXUnit::postData(char *body) {
+bool EthernetPXUnit::postData(StringBuffer *body) {
     if (!ethernetClient.connect("app.jrelo.com", 8183)) {
         Serial.println(F("Connection ERROR"));
         ethernetInitFlag = false;
@@ -60,9 +60,9 @@ bool EthernetPXUnit::postData(char *body) {
     ethernetClient.println(connectionPassword);
     ethernetClient.println(F("Connection: close"));
     ethernetClient.print(F("Content-Length: "));
-    ethernetClient.println(strlen(body));
+    ethernetClient.println(body->size());
     ethernetClient.println();
-    ethernetClient.print(body);
+    ethernetClient.print(body->toString());
 
     ethernetClient.stop();
 

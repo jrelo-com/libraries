@@ -12,7 +12,7 @@
 #include <ATCommands.h>
 
 
-class ATCmdExModule : public Module {
+class ATCommandExecutorModule : public Module {
 
     private :
 		StringBox *stringBox = NULL;
@@ -23,8 +23,8 @@ class ATCmdExModule : public Module {
 
     public :
 
-        ATCmdExModule(char *key, ATCommandExecutor *atEx, StringBox *stringBox);
-        ~ATCmdExModule();
+        ATCommandExecutorModule(char *key, ATCommandExecutor *atEx, StringBox *stringBox);
+        ~ATCommandExecutorModule();
         void update();
         void inputData(char *data);
         void outputData(Pipe *pipe);

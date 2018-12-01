@@ -9,6 +9,18 @@
  *
  * PUBLIC
  * */
+uint8_t SIMX::getSignalQuality() {
+    return this->signalQuality;
+}
+         
+uint16_t SIMX::getVoltage(){
+	return this->voltage;
+}
+
+uint8_t SIMX::getResetCounter(){
+	return resetCounter;
+}
+ 
 ATCommandExecutor* SIMX::getAtCmdEx() {
     return atEx;
 }
@@ -84,36 +96,52 @@ void SIMX::update() {
     if(errorCounter)
         checkErrors();
 
-    if(controlTimer.event() && SIMAvailableFlag) {
+	if(controlTimer.event()) {
 
-        if(!checkSIMBoard()) {
-            SIMAvailableFlag = false;
-            networkFlag = false;
-            prepareFlag = false;
-            GPRSConnectionFlag = false;
-            Serial.println(F("SIMX. Board unavailable"));
-            return;
-        }
+		Serial.print(F("SIMX. Signal quality = "));
+		Serial.println(signalQuality);
+		Serial.print(F("SIMX. Voltage = "));
+		Serial.println(voltage);
+		Serial.print(F("SIMX. Reset counter = "));
+		Serial.println(resetCounter);
 
-        if(checkSignal()) {
-            successProcessing(CHECK_SIGNAL);
+		if(SIMAvailableFlag) {
 
-            if(signalQuality > 6) {
-                if(!networkFlag && isNetworkReady()) {
-                    networkFlag = true;
-                    Serial.println(F("SIMX. Network is ready !"));
-                }
-                if(!GPRSConnectionFlag && prepareGPRS()) {
-                    GPRSConnectionFlag = true;
-                    Serial.println(F("SIMX. GPRS connection is ready !"));
-                }
-            }
-        } else {
-            errorProcessing(CHECK_SIGNAL);
-            networkFlag = false;
-            GPRSConnectionFlag = false;
-        }
-    }
+			if(checkVoltage()) {
+				successProcessing(CHECK_VOLTAGE);
+			} else {
+				errorProcessing(CHECK_VOLTAGE);
+			}
+
+			if(!checkSIMBoard()) {
+				SIMAvailableFlag = false;
+				networkFlag = false;
+				prepareFlag = false;
+				GPRSConnectionFlag = false;
+				Serial.println(F("SIMX. Board unavailable"));
+				return;
+			}
+
+			if(checkSignal()) {
+				successProcessing(CHECK_SIGNAL);
+
+				if(signalQuality > 6) {
+					if(!networkFlag && isNetworkReady()) {
+						networkFlag = true;
+						Serial.println(F("SIMX. Network is ready !"));
+					}
+					if(!GPRSConnectionFlag && prepareGPRS()) {
+						GPRSConnectionFlag = true;
+						Serial.println(F("SIMX. GPRS connection is ready !"));
+					}
+				}
+			} else {
+				errorProcessing(CHECK_SIGNAL);
+				networkFlag = false;
+				GPRSConnectionFlag = false;
+			}
+		}
+	}
 
 }
 
@@ -149,6 +177,29 @@ void SIMX::setHeaders(char *headers) {
  *
  * PRIVATE
  * */
+bool SIMX::checkVoltage(){
+	StringBuffer buffer0 = StringBuffer(stringBox);
+	bool result = atEx->sendAndCheck(AT_COMMAND_25, &buffer0, AT_OK);
+	if(!result)
+		return false;
+		
+	int index = StringBufferUtils::tailSearch(&buffer0, ",");
+	if(index == -1)
+		return false;
+	
+	StringBuffer buffer1 = StringBuffer(stringBox);
+	StringBufferUtils::substring(&buffer0, &buffer1, index+1, buffer0.size()-8);
+	
+	int voltage = TypeConverter::charArrayToInt(buffer1.toString());
+	if(voltage == 0)
+		return false;
+	
+	this->voltage = voltage;
+	
+	return true;
+} 
+ 
+ 
 bool SIMX::power() {
     if(checkSIMBoard()) {
         return true;
@@ -201,14 +252,14 @@ void SIMX::successProcessing(Action lastSuccessfulAction) {
 }
 
 void SIMX::powerOff() {
-    atEx->sendAndCheck(AT_COMMAND_16, "", 100, 100);  // ????????????????????????????????????
+    atEx->sendAndCheck(AT_COMMAND_16, EMPTY_STRING, 100, 100); 
 }
 
 void SIMX::restart() {
     lastFailureAction = EMPTY;
     lastSuccessfulAction = EMPTY;
     errorCounter = 0;
-    rebootCounter++;
+    resetCounter++;
 
     if(resetPin) {
         digitalWrite(resetPin,HIGH);
@@ -369,9 +420,6 @@ bool SIMX::sendRequest(RequestMethod method, StringBuffer *body, uint16_t *httpS
             return false;
         }
 
-        Serial.print(F("SIMX. HttpStatusCode = "));
-        Serial.println(*httpStatusCode);
-
         if(*httpStatusCode == 200) {
             buffer.clear();
 
@@ -416,11 +464,13 @@ bool SIMX::sendRequest(RequestMethod method, StringBuffer *body, uint16_t *httpS
 			errorProcessing(GET_HTTP_STATUS_CODE);
 			return false;
 		}
-
     }
 
+	Serial.print(F("SIMX. HTTP response status code = "));
+	Serial.println(*httpStatusCode);
+
     if(*httpStatusCode != 200 && *httpStatusCode != 204) {
-        Serial.print(F("SIMX. Error. Response status: "));
+        Serial.print(F("SIMX. Error = "));
         Serial.println(*httpStatusCode);
 
         errorProcessing(RESPONSE_60x);
@@ -473,8 +523,8 @@ bool SIMX::setHttpData(StringBuffer *body) {
 
 bool SIMX::getHttpStatusCodeAndDataLength(StringBuffer *buffer, uint16_t *httpStatusCode, uint16_t *dataLength) {
 
-    int first = StringBufferUtils::search(buffer, ",");
-    int last = StringBufferUtils::tailSearch(buffer, ",");
+    int first = StringBufferUtils::search(buffer, COMMA);
+    int last = StringBufferUtils::tailSearch(buffer, COMMA);
 
     if(first == -1 || last == -1)
         return false;
@@ -509,8 +559,8 @@ bool SIMX::checkSignal() {
         return false;
     }
 
-    int start = StringBufferUtils::search(&buffer, "+CSQ: ");
-    int stop = StringBufferUtils::tailSearch(&buffer, ",");
+    int start = StringBufferUtils::search(&buffer, AT_COMMAND_8_PART_1);
+    int stop = StringBufferUtils::tailSearch(&buffer, COMMA);
 
     StringBuffer tmp = StringBuffer(stringBox);
     StringBufferUtils::substring(&buffer, &tmp, start + 6, stop);

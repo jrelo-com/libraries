@@ -1,6 +1,6 @@
 /*
  * AUTHOR  : vladyslav.hubin.1989@gmail.com
- * VERSION : 1.0.0
+ * VERSION : 1.1.0
  * */
 
 #pragma once
@@ -27,7 +27,7 @@ class XUnit {
         char *uuid = NULL;
         bool encryption = false;
         virtual bool getData(StringBuffer *buffer) = 0;
-        virtual bool postData(char *body) = 0;       
+        virtual bool postData(StringBuffer *buffer) = 0;       
         void executor(char *json);
         void updateValuesInModules();
         void getRequest() ;

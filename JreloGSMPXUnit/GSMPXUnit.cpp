@@ -37,10 +37,9 @@ bool GSMPXUnit::getData(StringBuffer *body) {
     return result;
 }
 
-bool GSMPXUnit::postData(char *body) {
-	StringBuffer buffer = StringBuffer(&stringBox, body);
+bool GSMPXUnit::postData(StringBuffer *body) {
 	uint16_t responseCode = 0;
-    if(simx->postAction(&buffer, &responseCode)) {
+    if(simx->postAction(body, &responseCode)) {
 		return true;
     }
 #ifdef DEBUG

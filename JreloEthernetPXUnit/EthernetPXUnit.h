@@ -1,6 +1,6 @@
 /*
  * AUTHOR  : vladyslav.hubin.1989@gmail.com
- * VERSION : 1.0.0
+ * VERSION : 1.1.0
  * */
 
 #pragma once
@@ -30,7 +30,7 @@ class EthernetPXUnit : public XUnit {
     protected :
 	
         bool getData(StringBuffer *body);
-        bool postData(char *body);
+        bool postData(StringBuffer *body);
         int statusCode(char *response) ;
         int findHttpBody(char *response);
 

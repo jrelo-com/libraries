@@ -76,8 +76,8 @@ bool EthernetWXUnit::getData(StringBuffer *buffer) {
     return true;
 }
 
-bool EthernetWXUnit::postData(char *data) {
-    this->webSocketClient.sendData(data);
+bool EthernetWXUnit::postData(StringBuffer *data) {
+    this->webSocketClient.sendData(data->toString());
 }
 
 EthernetWXUnit::EthernetWXUnit(int stringBoxSize, const char *uuid, const char *connectionPassword, byte *mac) {

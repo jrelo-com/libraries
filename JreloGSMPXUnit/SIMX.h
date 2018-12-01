@@ -1,6 +1,6 @@
 /*
  * AUTHOR  : vladyslav.hubin.1989@gmail.com
- * VERSION : 2.0.0
+ * VERSION : 2.1.0
  * */
  
 #pragma once
@@ -14,13 +14,15 @@
 #include <StringBufferUtils.h>
 
 #define DEBUG
-#define SELF_CONTROL_AND_CHECK_NETWORK_DELAY 5000
+#define SELF_CONTROL_DELAY 10000
 #define MCE_CHECK_NETWORK 15
 #define MCE_INIT_HTTP 15
 #define MCE_RESPONSE_60x 1
 #define MCE_PREPARE_GPRS 15
 #define MCE_OTHER 5
 
+const char EMPTY_STRING	[] = "";
+const char COMMA		[] = ",";
 
 enum RequestMethod {
     GET,
@@ -48,7 +50,8 @@ enum Action {
 	SEND_POST_REQUEST,		//17
 	HTTP_DATA_DOWNLOAD_P1, 	//18
 	HTTP_DATA_DOWNLOAD_P2, 	//19
-	RESPONSE_60x			//20
+	RESPONSE_60x,			//20
+	CHECK_VOLTAGE			//21
 };
 
 class SIMX {
@@ -64,16 +67,17 @@ class SIMX {
         uint8_t powerPin = 0;
         uint8_t resetPin = 0;
         uint8_t errorCounter = 0;
-        uint8_t rebootCounter = 0;
+        uint8_t resetCounter = 0;
         uint8_t signalQuality = 0;
+        uint16_t voltage = 0;
         bool prepareFlag = false;			// check PIN and set APN
         bool networkFlag = false; 			// network redy to use
-        bool SIMAvailableFlag = false;  	// SIM awailable (power on and responsed)
+        bool SIMAvailableFlag = false;  	// SIM awailable (responds to requests)
         bool GPRSConnectionFlag = false;    // Internet ready
         bool useHTTPSFlag = false;
         Action lastFailureAction = EMPTY;
         Action lastSuccessfulAction  = EMPTY;
-        SimpleTimer controlTimer = SimpleTimer(SELF_CONTROL_AND_CHECK_NETWORK_DELAY);
+        SimpleTimer controlTimer = SimpleTimer(SELF_CONTROL_DELAY);
 
 		bool power();
 		bool checkSIMBoard();
@@ -102,6 +106,7 @@ class SIMX {
 		bool sendGetRequest(StringBuffer *buffer);
 		bool getHttpStatusCodeAndDataLength(StringBuffer *buffer, uint16_t *httpStatusCode, uint16_t *dataLength);
 		bool setHttpData(StringBuffer *body);
+		bool checkVoltage();
 		
     public:
 
@@ -122,6 +127,9 @@ class SIMX {
         void setUrl(char *url);
         void setHeaders(char *headers);
         ATCommandExecutor* getAtCmdEx();
+        uint8_t getSignalQuality();
+        uint16_t getVoltage();
+        uint8_t getResetCounter();
 
         bool isReady();
 

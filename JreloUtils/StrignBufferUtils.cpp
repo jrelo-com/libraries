@@ -28,18 +28,19 @@ static bool StringBufferUtils::substringBetween(StringBuffer *source, StringBuff
     int temp1 = stop - s;
     int length = temp1 - temp0;
 
-    if(length == 0)
+    if(length == 0){
         return false;
-
+    }   
+      
     for(int i=temp0, j=0; j < length; i++, j++) {
         if(!out->append(s[i])) {
             return false;
         }
     }
 
-    bool result = out->trim();
-
-    return result;
+    out->trim();
+		
+    return true;
 }
 
 static int StringBufferUtils::search(StringBuffer *source, char *pattern) {

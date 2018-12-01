@@ -104,7 +104,6 @@ bool ATCommandExecutor::readAndCheck(StringBuffer *responseBuffer, char *firstPa
                     findSecondPattern = true;
                 }
             }
-
         }
 
         if(findPattern && findSecondPattern) {

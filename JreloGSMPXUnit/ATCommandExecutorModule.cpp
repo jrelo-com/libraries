@@ -1,30 +1,31 @@
-#include <ATCmdExModule.h>
+#include <ATCommandExecutorModule.h>
 
-ATCmdExModule::ATCmdExModule(char *key, ATCommandExecutor *atEx, StringBox *stringBox) : Module(key){
+ATCommandExecutorModule::ATCommandExecutorModule(char *key, ATCommandExecutor *atEx, StringBox *stringBox) : Module(key){
 	this->atEx = atEx;
 	this->inputBuffer  = new StringBuffer(stringBox);
 	this->outputBuffer = new StringBuffer(stringBox);
 	this->stringBox = stringBox;
 }
 
-ATCmdExModule::~ATCmdExModule(){
+ATCommandExecutorModule::~ATCommandExecutorModule(){
 	delete this->inputBuffer;
 	delete this->outputBuffer;
 }
 
-void ATCmdExModule::inputData(char *data){
+void ATCommandExecutorModule::inputData(char *data){
+	this->inputBuffer->clear(); 
 	this->inputBuffer->appendString(data);
 	this->needActionFlag = true;
 }
 
-void ATCmdExModule::outputData(Pipe *pipe){
+void ATCommandExecutorModule::outputData(Pipe *pipe){
 	pipe->push('"');
 	pipe->push(this->outputBuffer->toString());
 	pipe->push('"');
 	this->outputBuffer->clear();
 }
 
-void ATCmdExModule::update() {	
+void ATCommandExecutorModule::update() {	
 	if(!this->needActionFlag)
 		return;
 				
@@ -38,10 +39,12 @@ void ATCmdExModule::update() {
 		StringBuffer buffer0(stringBox, part);
 		StringBuffer cmd(stringBox);
 		StringBuffer pat(stringBox);
-		StringBuffer temp(stringBox);
 		
 		bool result0 = StringBufferUtils::substringBetween(&buffer0 , &cmd, "'",  "'");
 		bool result1 = StringBufferUtils::substringBetween(&buffer0 , &pat, ",'",  "'");
+		
+		Serial.println(result0);
+		Serial.println(result1);
 				
 		if(!result0 || !result1){
 			this->inputBuffer->clear(); 
@@ -50,12 +53,13 @@ void ATCmdExModule::update() {
 			inform();
 			return;
 		}
-							
+		
+		buffer0.clear();
 		cmd.appendString(AT_END_LINE);
-		atEx->sendAndCheck(&cmd, &temp, pat.toString(), 15000, 15000);
+		atEx->sendAndCheck(&cmd, &buffer0, pat.toString(), 15000, 15000);
 								
 		
-		StringBufferUtils::escapeQuotes(&temp, outputBuffer);
+		StringBufferUtils::escapeQuotes(&buffer0, outputBuffer);
 
 		part = strtok(NULL, "&");	
 	}
