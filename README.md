@@ -1,7 +1,5 @@
-<div>
-    <a href="https://jrelo.com" target="_blank"><img src="https://app.jrelo.com/resources/img/logo-lg.png"
-                                                     title="jrelo.com logo"></a>
-</div>
+<img src="logo-lg.png">
+
 <h1><a target="_blank" href="https://jrelo.com">Jrelo</a> - control and monitoring of remote devices.</h1>
 <h2> Manage Arduino over the Internet.</h2>
 <br>
