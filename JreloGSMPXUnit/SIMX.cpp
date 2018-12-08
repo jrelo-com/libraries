@@ -17,7 +17,7 @@ uint16_t SIMX::getVoltage(){
 	return this->voltage;
 }
 
-uint8_t SIMX::getResetCounter(){
+uint16_t SIMX::getResetCounter(){
 	return resetCounter;
 }
  
@@ -252,7 +252,14 @@ void SIMX::successProcessing(Action lastSuccessfulAction) {
 }
 
 void SIMX::powerOff() {
-    atEx->sendAndCheck(AT_COMMAND_16, EMPTY_STRING, 100, 100); 
+    //~ atEx->sendAndCheck(AT_COMMAND_16, EMPTY_STRING, 100, 100); 
+    
+    digitalWrite(powerPin,LOW);
+    delay(10);
+    digitalWrite(powerPin,HIGH);
+    delay(1250);
+    digitalWrite(powerPin,LOW);
+    delay(10);
 }
 
 void SIMX::restart() {

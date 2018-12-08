@@ -67,7 +67,7 @@ class SIMX {
         uint8_t powerPin = 0;
         uint8_t resetPin = 0;
         uint8_t errorCounter = 0;
-        uint8_t resetCounter = 0;
+        uint16_t resetCounter = 0;
         uint8_t signalQuality = 0;
         uint16_t voltage = 0;
         bool prepareFlag = false;			// check PIN and set APN
@@ -129,7 +129,7 @@ class SIMX {
         ATCommandExecutor* getAtCmdEx();
         uint8_t getSignalQuality();
         uint16_t getVoltage();
-        uint8_t getResetCounter();
+        uint16_t getResetCounter();
 
         bool isReady();
 
