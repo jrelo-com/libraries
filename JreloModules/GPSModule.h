@@ -1,26 +1,24 @@
 /*
  * AUTHOR  : vladyslav.hubin.1989@gmail.com
- * VERSION : 1.0.0
+ * VERSION : 2.0.0
  * */
 
 #pragma once
 #include <Arduino.h>
 #include <Module.h>
 #include <SimpleTimer.h>
-#include <TinyGPS.h>
+#include <LocationProvider.h>
 
 class GPSModule : public Module {
 
     private:
 
-        SimpleTimer timer = SimpleTimer(15000);
-        TinyGPS *gps = NULL;
-        HardwareSerial *serial = NULL;
-        void read(unsigned long ms);
+        SimpleTimer timer = SimpleTimer(30000);
+		LocationProvider *locationProvider = NULL;
 
     public :
 
-        GPSModule(char *key, TinyGPS *gps, HardwareSerial *serial);
+        GPSModule(char *key, LocationProvider *locationProvider);
         ~GPSModule();
         void inputData(char *data);
         void outputData(Pipe *pipe);

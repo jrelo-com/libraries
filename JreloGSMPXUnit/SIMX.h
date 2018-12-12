@@ -1,6 +1,6 @@
 /*
  * AUTHOR  : vladyslav.hubin.1989@gmail.com
- * VERSION : 2.1.0
+ * VERSION : 2.2.0
  * */
  
 #pragma once
@@ -12,14 +12,17 @@
 #include <StringBuffer.h>
 #include <TypeConverter.h>
 #include <StringBufferUtils.h>
+#include <LocationProvider.h>
 
 #define DEBUG
 #define SELF_CONTROL_DELAY 10000
+#define GET_LOCATION_DELAY 30000
 #define MCE_CHECK_NETWORK 15
 #define MCE_INIT_HTTP 15
 #define MCE_RESPONSE_60x 1
 #define MCE_PREPARE_GPRS 15
 #define MCE_OTHER 5
+#define MAX_FAILED_ACTIONS 500
 
 const char EMPTY_STRING	[] = "";
 const char COMMA		[] = ",";
@@ -44,17 +47,17 @@ enum Action {
 	SELECT_PROFILE,			//11
 	GET_HTTP_STATUS_CODE, 	//12
 	HTTP_READ,				//13
-	SEND_GET_REQUEST,		//14	
+	SEND_REQUEST,			//14	
 	HTTP_TERM,				//15
 	HTTP_PARA,				//16
-	SEND_POST_REQUEST,		//17
-	HTTP_DATA_DOWNLOAD_P1, 	//18
-	HTTP_DATA_DOWNLOAD_P2, 	//19
-	RESPONSE_60x,			//20
-	CHECK_VOLTAGE			//21
+	HTTP_DATA_DOWNLOAD_P1, 	//17
+	HTTP_DATA_DOWNLOAD_P2, 	//18
+	RESPONSE_60x,			//19
+	CHECK_VOLTAGE,			//20
+	GET_LOCATION			//21
 };
 
-class SIMX {
+class SIMX : public LocationProvider {
 
     private :
 
@@ -67,9 +70,11 @@ class SIMX {
         uint8_t powerPin = 0;
         uint8_t resetPin = 0;
         uint8_t errorCounter = 0;
-        uint16_t resetCounter = 0;
         uint8_t signalQuality = 0;
+        uint16_t resetCounter = 0;
         uint16_t voltage = 0;
+        uint16_t failedActionCounter = 0;
+        float location[2] = {1000};			// 0 - lon, 1 - lat
         bool prepareFlag = false;			// check PIN and set APN
         bool networkFlag = false; 			// network redy to use
         bool SIMAvailableFlag = false;  	// SIM awailable (responds to requests)
@@ -77,7 +82,8 @@ class SIMX {
         bool useHTTPSFlag = false;
         Action lastFailureAction = EMPTY;
         Action lastSuccessfulAction  = EMPTY;
-        SimpleTimer controlTimer = SimpleTimer(SELF_CONTROL_DELAY);
+        SimpleTimer controlTimer0 = SimpleTimer(SELF_CONTROL_DELAY);
+        SimpleTimer controlTimer1 = SimpleTimer(GET_LOCATION_DELAY);
 
 		bool power();
 		bool checkSIMBoard();
@@ -107,6 +113,8 @@ class SIMX {
 		bool getHttpStatusCodeAndDataLength(StringBuffer *buffer, uint16_t *httpStatusCode, uint16_t *dataLength);
 		bool setHttpData(StringBuffer *body);
 		bool checkVoltage();
+		bool checkLocation();
+		
 		
     public:
 
@@ -130,7 +138,8 @@ class SIMX {
         uint8_t getSignalQuality();
         uint16_t getVoltage();
         uint16_t getResetCounter();
-
+        uint16_t getFailedActionCounter();
+        float* getLocation();
+        
         bool isReady();
-
 };

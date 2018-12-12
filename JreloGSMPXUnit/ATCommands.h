@@ -1,6 +1,6 @@
 /*
  * AUTHOR  : vladyslav.hubin.1989@gmail.com
- * VERSION : 2.1.0
+ * VERSION : 2.2.0
  * */
  
 #pragma once
@@ -32,6 +32,7 @@ const char AT_COMMAND_22[]         = ",100000\r\n";
 const char AT_COMMAND_23[]         = "AT+SAPBR=3,1,\"APN\",\"";
 const char AT_COMMAND_24[] PROGMEM = "AT+HTTPSSL=0\r\n";
 const char AT_COMMAND_25[] PROGMEM = "AT+CBC\r\n";
+const char AT_COMMAND_26[] PROGMEM = "AT+CIPGSMLOC=1,1\r\n";
 
 const char AT_OK				[] = "OK\r\n";
 const char AT_END_LINE			[] = "\r\n";
@@ -49,3 +50,4 @@ const char AT_COMMAND_9_PART_2	[] = "+SAPBR: 1,1";
 const char AT_COMMAND_5_PART_1	[] = "ERROR";
 const char AT_COMMAND_34_PART_1	[] = "+HTTPACTION:";
 const char AT_COMMAND_21_PART_1	[] = "DOWNLOAD\r\n";
+const char AT_COMMAND_26_PART_1	[] = "+CIPGSMLOC: 0,";

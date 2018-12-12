@@ -25,8 +25,13 @@ void GSMUnitInfoModule::outputData(Pipe *pipe) {
 	TypeConverter::intToCharArray(temp, simx->getVoltage());
 	pipe->push(temp);
 	
+	pipe->push(",\"fac\":");
+	TypeConverter::intToCharArray(temp, simx->getFailedActionCounter());
+	pipe->push(temp);
+	
 	pipe->push(",\"sq\":");
 	TypeConverter::intToCharArray(temp, simx->getSignalQuality());
 	pipe->push(temp);
+	
 	pipe->push("}");	
 }
