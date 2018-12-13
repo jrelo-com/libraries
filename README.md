@@ -1,4 +1,4 @@
-<img src="logo-lg.png">
+<img src="img/logo-lg.png" title="jrelo">
 
 <h1><a target="_blank" href="https://jrelo.com">Jrelo</a> - control and monitoring of remote devices.</h1>
 <h2> Manage Arduino over the Internet.</h2>
@@ -6,6 +6,9 @@
 <h2>
     Implementations of units for the Arduino MEGA 2560.
 </h2>
+
+<img src="img/img1.jpg" title="Arduino and SIM900">
+
 <ui>
     <li><b>EthernetPUnit</b> - unit uses EthernetShield W5100. Data transmission via HTTP Polling.</li>
     <li><b>EthernetPXUnit</b> - unit uses EthernetShield W5100. Data transmission via HTTP Polling (with StringBox).
@@ -21,45 +24,22 @@
     Modules (compatible with all unit implementations)
 </h2>
 
-<div>
-    <b>BMP180PressureModule</b> - BMP180 sensor for measuring pressure (wrapper).
-</div>
-<div>
-    <b>BMP180TemperatureModule</b> - BMP180 sensor for temperature measurement (wrapper).
-</div>
-<div>
-    <b>DallasTemperatureModule</b> - Dallas 18B20 sensor for temperature measurement (wrapper).
-</div>
-<div>
-    <b>DHTHumidityModule</b> - DHT sensor for measuring humidity (wrapper).
-</div>
-<div>
-    <b>DHTTemperatureModule</b> - DHT sensor for temperature measurement (wrapper).
-</div>
-<div>
-    <b>GPSModule</b> - GPS module NEO-6M (wrapper).
-</div>
-<div>
-    <b>EventSchedulerModule</b>, <b>WorkSchedulerModule</b> - event schedule.
-</div>
-<div>
-    <b>LifetimeModule</b> - lifetime.
-</div>
-<div>
-    <b>MultiRelayModule</b> - relay set.
-</div>
-<div>
-    <b>MultiRelaySSModule</b> - relay set (state saving).
-</div>
-<div>
-    <b>RelayModule</b> - relay.
-</div>
-<div>
-    <b>RelaySSModule</b> - relay (state saving).
-</div>
-<div>
-    <b>TimeModule</b> - real time in unit.
-</div>
+<ui>
+    <li><b>BMP180PressureModule</b> - BMP180 sensor for measuring pressure (wrapper).</li>
+    <li><b>BMP180TemperatureModule</b> - BMP180 sensor for temperature measurement (wrapper).</li>
+    <li><b>DallasTemperatureModule</b> - Dallas 18B20 sensor for temperature measurement (wrapper).</li>
+    <li><b>DHTHumidityModule</b> - DHT sensor for measuring humidity (wrapper).</li>
+    <li><b>DHTTemperatureModule</b> - DHT sensor for temperature measurement (wrapper).</li>
+    <li><b>GPSModule</b> - GPS module NEO-6M (wrapper).</li>
+    <li><b>EventSchedulerModule</b>, <b>WorkSchedulerModule</b> - event schedule.</li>
+    <li><b>LifetimeModule</b> - lifetime.</li>
+    <li><b>MultiRelayModule</b> - relay set.</li>
+    <li><b>MultiRelaySSModule</b> - relay set (state saving).</li>
+    <li><b>RelayModule</b> - relay.</li>
+    <li><b>RelaySSModule</b> - relay (state saving).</li>
+    <li><b>TimeModule</b> - real time in unit.</li>
+</ui>
+
 
 <p><i>Wrapper - adapter class using the functionality of a third-party library</i></p>
 <br>
