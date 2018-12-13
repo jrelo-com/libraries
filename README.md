@@ -7,6 +7,7 @@
     Implementations of units for the Arduino MEGA 2560.
 </h2>
 
+<img src="img/img0.jpg" title="Arduino and Ethernet">
 <img src="img/img1.jpg" title="Arduino and SIM900">
 
 <ui>
