@@ -1,19 +1,20 @@
-<img src="logo-lg.png">
+<img src="img/logo-lg.png" title="jrelo">
 
 <h1><a target="_blank" href="https://jrelo.com">Jrelo</a> - control and monitoring of remote devices.</h1>
-<h2> Manage Arduino over the Internet.</h2>
-<br>
+<h2>Control Arduino over the Internet.</h2>
+<img src="img/img0.jpg" title="Arduino and Ethernet"/>
+<img src="img/img1.jpg" title="Arduino and SIM900"/>
 <h2>
     Implementations of units for the Arduino MEGA 2560.
 </h2>
 <ui>
-    <li><b>EthernetPUnit</b> - unit uses EthernetShield W5100. Data transmission via HTTP Polling.</li>
-    <li><b>EthernetPXUnit</b> - unit uses EthernetShield W5100. Data transmission via HTTP Polling (with StringBox).
+    <li><b>EthernetPUnit</b> - unit uses EthernetShield W5100. Data transfer through HTTP Polling.</li>
+    <li><b>EthernetPXUnit</b> - unit uses EthernetShield W5100. Data transfer through Polling (with StringBox).
     </li>
-    <li><b>EthernetWUnit</b> - unit uses EthernetShield W5100. Data transmission via WebSocket.</li>
-    <li><b>EthernetWXUnit</b> - unit uses EthernetShield W5100. Data transmission via WebSocket (with StringBox).
+    <li><b>EthernetWUnit</b> - unit uses EthernetShield W5100. Data transfer through WebSocket.</li>
+    <li><b>EthernetWXUnit</b> - unit uses EthernetShield W5100. Data transfer through WebSocket (with StringBox).
     </li>
-    <li><b>GSMPXUnit</b> - unit uses SIM board. Data transmission via HTTP(S) Polling (with StringBox).</li>
+    <li><b>GSMPXUnit</b> - unit uses SIM board. Data transfer through HTTP(S) Polling (with StringBox).</li>
 </ui>
 <p><i>See examples <a target="_blank" href="https://jrelo.com/archives/category/examples-ru/arduino">here</a>.</i></p>
 <br>
@@ -21,47 +22,49 @@
     Modules (compatible with all unit implementations)
 </h2>
 
-<div>
-    <b>BMP180PressureModule</b> - BMP180 sensor for measuring pressure (wrapper).
-</div>
-<div>
-    <b>BMP180TemperatureModule</b> - BMP180 sensor for temperature measurement (wrapper).
-</div>
-<div>
-    <b>DallasTemperatureModule</b> - Dallas 18B20 sensor for temperature measurement (wrapper).
-</div>
-<div>
-    <b>DHTHumidityModule</b> - DHT sensor for measuring humidity (wrapper).
-</div>
-<div>
-    <b>DHTTemperatureModule</b> - DHT sensor for temperature measurement (wrapper).
-</div>
-<div>
-    <b>GPSModule</b> - GPS module NEO-6M (wrapper).
-</div>
-<div>
-    <b>EventSchedulerModule</b>, <b>WorkSchedulerModule</b> - event schedule.
-</div>
-<div>
-    <b>LifetimeModule</b> - lifetime.
-</div>
-<div>
-    <b>MultiRelayModule</b> - relay set.
-</div>
-<div>
-    <b>MultiRelaySSModule</b> - relay set (state saving).
-</div>
-<div>
-    <b>RelayModule</b> - relay.
-</div>
-<div>
-    <b>RelaySSModule</b> - relay (state saving).
-</div>
-<div>
-    <b>TimeModule</b> - real time in unit.
-</div>
-
+<ui>
+    <li><b>BMP180PressureModule</b> - BMP180 sensor for measuring pressure (wrapper).</li>
+    <li><b>BMP180TemperatureModule</b> - BMP180 sensor for temperature measurement (wrapper).</li>
+    <li><b>DallasTemperatureModule</b> - Dallas 18B20 sensor for temperature measurement (wrapper).</li>
+    <li><b>DHTHumidityModule</b> - DHT sensor for measuring humidity (wrapper).</li>
+    <li><b>DHTTemperatureModule</b> - DHT sensor for temperature measurement (wrapper).</li>
+    <li><b>GPSModule</b> - GPS module for different location providers.</li>
+    <li><b>EventSchedulerModule</b>, <b>WorkSchedulerModule</b> - event schedule.</li>
+    <li><b>LifetimeModule</b> - lifetime.</li>
+    <li><b>MultiRelayModule</b> - relay set.</li>
+    <li><b>MultiRelaySSModule</b> - relay set (state saving).</li>
+    <li><b>RelayModule</b> - relay.</li>
+    <li><b>RelaySSModule</b> - relay (state saving).</li>
+    <li><b>TimeModule</b> - real time in unit.</li>
+</ui>
 <p><i>Wrapper - adapter class using the functionality of a third-party library</i></p>
+<br>
+<h3>Example of a unit with two modules</h3>
+
+<pre>
+#include &lt;EthernetPUnit.h&gt;
+#include &lt;LifetimeModule.h&gt;
+#include &lt;RelayModule.h&gt;
+
+byte mac[] = { 0xDE, 0xAB, 0xDE, 0xEF, 0xFF, 0xEF };
+char uuid[] = "00000000-0000-0000-0000-0000000";
+char connectionPassword[] = "00000000000000000000000000000";
+
+EthernetPUnit unit(uuid, connectionPassword, mac);
+LifetimeModule ltm(&quot;lt&quot;); // "lt" - module key
+RelayModule rm(&quot;rm&quot;, 22); // "rm" - module key, 22 - pin
+
+void setup() {
+    Serial.begin(9600);
+    unit.putModule(&amp;ltm);
+    unit.putModule(&amp;rm);
+}
+
+void loop() {
+    unit.update();
+}
+</pre>
+
 <br>
 <h2>
     Utilities for working with strings
