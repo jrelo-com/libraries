@@ -13,9 +13,6 @@ float* SIMX::getLocation(){
 	return location;
 } 
  
-uint16_t SIMX::getFailedActionCounter(){
-	return this->failedActionCounter;
-}
  
 uint8_t SIMX::getSignalQuality() {
     return this->signalQuality;
@@ -219,9 +216,6 @@ bool SIMX::checkLocation(){
 		part = strtok(NULL, COMMA);	
 	}
 	
-	//Serial.println(location[0], 6); //lng
-	//Serial.println(location[1], 6); //lat
-	
 	return true;
 }
 
@@ -320,7 +314,7 @@ void SIMX::restart() {
 
     if(resetPin) {
         digitalWrite(resetPin,HIGH);
-        delay(210);
+        delay(300);
         digitalWrite(resetPin,LOW);
     } else {
         powerOff();
@@ -533,16 +527,6 @@ bool SIMX::sendRequest(RequestMethod method, StringBuffer *body, uint16_t *httpS
 	Serial.print(F("SIMX. HTTP response status code = "));
 	Serial.println(*httpStatusCode);
 
-    if(*httpStatusCode != 200 && *httpStatusCode != 204) {
-        Serial.print(F("SIMX. Error = "));
-        Serial.println(*httpStatusCode);
-
-        errorProcessing(RESPONSE_60x);
-        return false;
-    } else {
-        successProcessing(RESPONSE_60x);
-    }
-
     if(httpTerm()) {
         successProcessing(HTTP_TERM);
     } else {
@@ -550,7 +534,25 @@ bool SIMX::sendRequest(RequestMethod method, StringBuffer *body, uint16_t *httpS
         return false;
     }
 
-    return true;
+	if(*httpStatusCode == 200 || *httpStatusCode == 204){
+		failedActionCounter = 0;
+		return true;
+	}
+
+	if(*httpStatusCode >= 400 && *httpStatusCode <= 526){	
+		failedActionCounter = 0;
+		return false;
+	}
+	
+    if(*httpStatusCode >= 600) {
+        Serial.print(F("SIMX. Error = "));
+        Serial.println(*httpStatusCode);
+
+        errorProcessing(RESPONSE_60x);
+        return false;
+    } 
+
+    return false;
 }
 
 bool SIMX::setHttpData(StringBuffer *body) {

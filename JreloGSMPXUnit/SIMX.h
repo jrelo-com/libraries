@@ -22,7 +22,7 @@
 #define MCE_RESPONSE_60x 1
 #define MCE_PREPARE_GPRS 15
 #define MCE_OTHER 5
-#define MAX_FAILED_ACTIONS 500
+#define MAX_FAILED_ACTIONS 20
 
 const char EMPTY_STRING	[] = "";
 const char COMMA		[] = ",";
@@ -138,7 +138,6 @@ class SIMX : public LocationProvider {
         uint8_t getSignalQuality();
         uint16_t getVoltage();
         uint16_t getResetCounter();
-        uint16_t getFailedActionCounter();
         float* getLocation();
         
         bool isReady();
