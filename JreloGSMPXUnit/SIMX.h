@@ -17,12 +17,12 @@
 #define DEBUG
 #define SELF_CONTROL_DELAY 10000
 #define GET_LOCATION_DELAY 30000
-#define MCE_CHECK_NETWORK 15
+#define MCE_CHECK_NETWORK 10
 #define MCE_INIT_HTTP 15
 #define MCE_RESPONSE_60x 1
-#define MCE_PREPARE_GPRS 15
+#define MCE_PREPARE_GPRS 10
 #define MCE_OTHER 5
-#define MAX_FAILED_ACTIONS 20
+#define MAX_FAILED_ACTIONS 30
 
 const char EMPTY_STRING	[] = "";
 const char COMMA		[] = ",";

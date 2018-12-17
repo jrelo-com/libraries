@@ -311,6 +311,9 @@ void SIMX::restart() {
     lastSuccessfulAction = EMPTY;
     errorCounter = 0;
     resetCounter++;
+    networkFlag = false;
+    SIMAvailableFlag = false;
+    GPRSConnectionFlag = false;
 
     if(resetPin) {
         digitalWrite(resetPin,HIGH);
@@ -326,13 +329,12 @@ void SIMX::checkErrors() {
 	if(failedActionCounter >= MAX_FAILED_ACTIONS){
 	    Serial.println(F("SIMX. Reset "));
 	    failedActionCounter = 0;
-	    lastFailureAction = 0;
         restart();
 	}
 
     if(lastFailureAction == RESPONSE_60x) {
-        if(errorCounter > MCE_RESPONSE_60x) {
-            Serial.println(F("SIMX. Response 60X. Restart 60 sec..."));
+        if(errorCounter >= MCE_RESPONSE_60x) {
+            Serial.println(F("SIMX. Response 60X. Restart..."));
             restart();
         }
         return;
