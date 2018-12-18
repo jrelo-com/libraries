@@ -1,6 +1,6 @@
 #include <BMP180TemperatureModule.h>
 
-BMP180TemperatureModule::BMP180TemperatureModule(char *key, BMP180Wrapper *bmp180) : Module(key) {
+BMP180TemperatureModule::BMP180TemperatureModule(const char *key, BMP180Wrapper *bmp180) : Module(key) {
     this->bmp180 = bmp180;
 }
 
@@ -12,7 +12,7 @@ void BMP180TemperatureModule::update() {
     }
 }
 
-void BMP180TemperatureModule::inputData(char *data) {}
+void BMP180TemperatureModule::inputData(const char *data) {}
 
 void BMP180TemperatureModule::outputData(Pipe *pipe) {
 	

@@ -1,6 +1,6 @@
 /*
  * AUTHOR  : vladyslav.hubin.1989@gmail.com
- * VERSION : 1.0.0
+ * VERSION : 1.0.1
  * */
 
 #pragma once
@@ -15,10 +15,11 @@ class TypeConverter {
         static void intToCharArray(char *str, int i);
         static void boolToCharArray(char *str, bool b);
         static void floatToCharArray(char *str, float f, int length, int lengthAfterPoint);
-		static int charArrayToInt(char *str);
-		static long charArrayToLong(char *str);
-		static bool charArrayToBool(char *str);
-		static float charArrayToFloat(char *str);
-		static unsigned long charArrayToUnsignedLong(char *str);
+        
+		static int charArrayToInt(const char *str);
+		static long charArrayToLong(const char *str);
+		static bool charArrayToBool(const char *str);
+		static float charArrayToFloat(const char *str);
+		static unsigned long charArrayToUnsignedLong(const char *str);
 
 };

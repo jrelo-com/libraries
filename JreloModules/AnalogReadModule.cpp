@@ -1,6 +1,6 @@
 #include <AnalogReadModule.h>
 
-AnalogReadModule::AnalogReadModule(char *key, int port) : Module(key) {
+AnalogReadModule::AnalogReadModule(const char *key, int port) : Module(key) {
     this->port = port;
 }
 
@@ -11,7 +11,7 @@ void AnalogReadModule::update() {
         inform();
 }
 
-void AnalogReadModule::inputData(char *data) {}
+void AnalogReadModule::inputData(const char *data) {}
 
 void AnalogReadModule::outputData(Pipe *pipe) {
 	

@@ -13,7 +13,7 @@ void Unit::executor(String *json) {
     JsonStreamingParser parser;
     parser.setListener(&listener);
 
-    for (int i = 0; i < json->length(); i++) {
+    for (unsigned int i = 0; i < json->length(); i++) {
         parser.parse((*json)[i]);
     }
     parser.reset();
@@ -38,9 +38,16 @@ void Unit::getRequest() {
 		return;
 	
 	String str = "";
-    bool response = getData(&str);
+    bool result = getData(&str);
 
-    if (!response) {
+    Serial.print(F("GET data - "));
+    if(result) {
+        Serial.println(F("Success"));
+    } else {
+        Serial.println(F("Failure"));
+    }
+
+    if (!result) {
         return;
     }
 
@@ -84,7 +91,13 @@ void Unit::prepareOutgoingData() {
     Serial.println(str);
 #endif
 
-     postData(&str);
+    bool result = postData(&str);
+	Serial.print(F("POST data - "));
+	if(result) {
+		Serial.println(F("Success"));
+	} else {
+		Serial.println(F("Failure"));
+	}
 }
 
 bool Unit::needToSend() {

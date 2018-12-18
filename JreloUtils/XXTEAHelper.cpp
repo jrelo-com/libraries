@@ -3,7 +3,7 @@
 #include <Base64.h>
 
 
-static char* XXTEAHelper::encryptData(char *input, int inputLen, char *encryptionPassword) {
+static char* XXTEAHelper::encryptData(const char *input, int inputLen, const char *encryptionPassword) {
     int size;
     char *data = xxtea_encrypt(input, inputLen, encryptionPassword, &size);
     int encodedLen = base64_enc_len(size)+1;
@@ -15,7 +15,7 @@ static char* XXTEAHelper::encryptData(char *input, int inputLen, char *encryptio
 }
 
 
-static char* XXTEAHelper::decryptData(char *input, int inputLen, char *encryptionPassword) {
+static char* XXTEAHelper::decryptData(const char *input, int inputLen, const char *encryptionPassword) {
     int decodedLen = base64_dec_len(input, inputLen);
     char* decodedData = new char[inputLen] {'\0'};
     base64_decode(decodedData, input, inputLen);

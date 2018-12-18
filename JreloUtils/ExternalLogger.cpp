@@ -1,6 +1,6 @@
 #include <ExternalLogger.h>
 
-ExternalLogger::ExternalLogger(char *fileName, HardwareSerial *hs, StringBox *stringBox) {
+ExternalLogger::ExternalLogger(const char *fileName, HardwareSerial *hs, StringBox *stringBox) {
     this->fileName = fileName;
     this->hs = hs;
 

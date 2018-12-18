@@ -1,6 +1,6 @@
 /*
  * AUTHOR  : vladyslav.hubin.1989@gmail.com
- * VERSION : 2.0.0
+ * VERSION : 2.0.1
  * */
 
 #pragma once
@@ -18,9 +18,9 @@ class GPSModule : public Module {
 
     public :
 
-        GPSModule(char *key, LocationProvider *locationProvider);
+        GPSModule(const char *key, LocationProvider *locationProvider);
         ~GPSModule();
-        void inputData(char *data);
+        void inputData(const char *data);
         void outputData(Pipe *pipe);
         void update();
 

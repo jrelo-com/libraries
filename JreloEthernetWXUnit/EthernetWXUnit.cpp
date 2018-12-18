@@ -15,9 +15,9 @@ bool EthernetWXUnit::ethernetInit() {
 }
 
 void EthernetWXUnit::prepare() {
-    webSocketClient.userAgent = userAgent;
-	webSocketClient.host = host;
-	webSocketClient.connectionPassword = connectionPassword;
+    webSocketClient.userAgent = (char*)userAgent;
+	webSocketClient.host = (char*)host;
+	webSocketClient.connectionPassword = (char*)connectionPassword;
 	
 	strcpy(this->path, "/api/v1/unit/");
     strcat(this->path, uuid);
@@ -27,7 +27,7 @@ void EthernetWXUnit::prepare() {
 bool EthernetWXUnit::connection() {
 
 	if(!ethernetReadyFlag)
-		return;
+		return false;
 				
     if (ethernetClient.connect(host, 8181)) {
         Serial.println(F("Conected"));
@@ -78,6 +78,7 @@ bool EthernetWXUnit::getData(StringBuffer *buffer) {
 
 bool EthernetWXUnit::postData(StringBuffer *data) {
     this->webSocketClient.sendData(data->toString());
+	return true;
 }
 
 EthernetWXUnit::EthernetWXUnit(int stringBoxSize, const char *uuid, const char *connectionPassword, byte *mac) {

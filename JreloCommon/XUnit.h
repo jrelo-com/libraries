@@ -1,6 +1,6 @@
 /*
  * AUTHOR  : vladyslav.hubin.1989@gmail.com
- * VERSION : 1.1.0
+ * VERSION : 1.1.1
  * */
 
 #pragma once
@@ -22,13 +22,13 @@ class XUnit {
 
         LList<Module> *modules = new LList<Module>;
         StringBox stringBox = StringBox(); 
-        char encryptionPassword[51] = {0};
-        char *connectionPassword = NULL;
-        char *uuid = NULL;
+        const char *encryptionPassword = NULL;
+        const char *connectionPassword = NULL;
+        const char *uuid = NULL;
         bool encryption = false;
         virtual bool getData(StringBuffer *buffer) = 0;
         virtual bool postData(StringBuffer *buffer) = 0;       
-        void executor(char *json);
+        void executor(const char *json);
         void updateValuesInModules();
         void getRequest() ;
         void prepareOutgoingData();
@@ -41,7 +41,7 @@ class XUnit {
         virtual ~XUnit();
         
         void useEncryption(bool encryption) ;
-        void setEncryptionPassword(char *encryptionPassword) ;
+        void setEncryptionPassword(const char *encryptionPassword) ;
         void putModule(Module *module);
         StringBox* getStringBox();
        

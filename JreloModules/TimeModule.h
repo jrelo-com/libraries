@@ -1,6 +1,6 @@
 /*
  * AUTHOR  : vladyslav.hubin.1989@gmail.com
- * VERSION : 1.0.0
+ * VERSION : 1.0.1
  * */
 
 #pragma once
@@ -38,7 +38,7 @@ class TimeModule : public Module, public TimeProvider {
 		int getMonth();
 		int getYear();
  
-        void inputData(char *data);
+        void inputData(const char *data);
         void outputData(Pipe *pipe);
         void update();
 	

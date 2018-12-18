@@ -44,7 +44,7 @@ int StringBox::getMemoryLength() {
  * */
 void StringBox::init() {
     if(this->memory != NULL) {
-        Serial.println(F("StringBox. Already initialized !"));
+        Serial.println(F("\r\nStringBox. Already initialized !"));
         return;
     }
 
@@ -59,7 +59,7 @@ void StringBox::init() {
 int StringBox::getTicket(int size) {
 
     if(this->memory == NULL) {
-        Serial.println(F("StringBox. Not initialized !"));
+        Serial.println(F("\r\nStringBox. Not initialized !"));
         return 0;
     }
 
@@ -68,7 +68,7 @@ int StringBox::getTicket(int size) {
     }
 
 #ifdef DEBUG
-    Serial.print(F("StringBox. New ticket ... "));
+    Serial.print(F("\r\nStringBox. New ticket ... "));
     Serial.print(F("Requests "));
     Serial.print(size);
     Serial.print(F(" characters"));
@@ -84,7 +84,7 @@ int StringBox::getTicket(int size) {
     }
 
     if(ticketNumber == 0) {
-        Serial.println(F("StringBox. No tickets available ! "));
+        Serial.println(F("\r\nStringBox. No tickets available ! "));
         delay(10000);
         return 0;
     }
@@ -95,7 +95,6 @@ int StringBox::getTicket(int size) {
     bool x = false;
     int begin = -1;
     int end = -1;
-    int c = 0;
     bool result = false;
 
     bool defragmentationFlag = false;
@@ -143,7 +142,7 @@ int StringBox::getTicket(int size) {
                 defragmentationFlag = true;
                 defragmentation();
             } else {
-                Serial.println(F("StringBox. Defragmentation did not help! "));
+                Serial.println(F("\r\nStringBox. Defragmentation did not help! "));
                 showMemory();
                 return 0;
             }
@@ -158,7 +157,7 @@ int StringBox::getTicket(int size) {
     countOfTickets++;
 
 #ifdef DEBUG
-    Serial.print(F("StringBox. New ticket => "));
+    Serial.print(F("\r\nStringBox. New ticket => "));
     Serial.println(ticketNumber);
 #endif
 
@@ -175,7 +174,7 @@ void StringBox::defragmentation() {
 
 #ifdef DEBUG
     showMemory();
-    Serial.print(F("StringBox. Defragmentation. Tickets => "));
+    Serial.print(F("\r\nStringBox. Defragmentation. Tickets => "));
     Serial.println(countOfTickets);
 #endif
 
@@ -183,8 +182,6 @@ void StringBox::defragmentation() {
     int index = 0;
 
     bool x = false;
-    int begin = -1;
-    int end = -1;
 
     for(int i = 0; i < memoryLength; i++) {
 
@@ -242,7 +239,7 @@ char* StringBox::getStringByTicket(int ticket) {
         }
     }
 
-    Serial.print(F("\r\StringBox. Ticket not found ! => "));
+    Serial.print(F("\r\nStringBox. Ticket not found ! => "));
     Serial.println(ticket);
 
     return NULL;
@@ -254,14 +251,13 @@ char* StringBox::getStringByTicket(int ticket) {
 void StringBox::returnTicket(int ticket) {
 
 #ifdef DEBUG
-    Serial.print(F("StringBox. Return ticket => "));
+    Serial.print(F("\r\nStringBox. Return ticket => "));
     Serial.println(ticket);
 #endif
 
     if(ticket >= 0)
         return;
 
-    bool x = false;
     int begin = -1;
     int end = -1;
 
@@ -273,7 +269,7 @@ void StringBox::returnTicket(int ticket) {
     }
 
     if(begin == -1 ) {
-		Serial.print(F("StringBox. Returned ticket not found"));
+		Serial.print(F("\r\nStringBox. Returned ticket not found"));
         return;
     }
 
@@ -292,7 +288,7 @@ void StringBox::returnTicket(int ticket) {
     memset(&memory[begin], '\0', len + 1);
 
 #ifdef DEBUG
-    Serial.println(F("StringBox. Return ticket => OK"));
+    Serial.println(F("\r\nStringBox. Return ticket => OK"));
 #endif
 }
 /*
@@ -301,8 +297,8 @@ void StringBox::returnTicket(int ticket) {
  * */
 void StringBox::showMemory() {
 
-    Serial.println(F("\r\StringBox. Memery status."));
-    Serial.print(F("\r\StringBox. Available memory = "));
+    Serial.println(F("\r\nStringBox. Memery status."));
+    Serial.print(F("\r\nStringBox. Available memory = "));
     Serial.print(availableMemory());
     Serial.println(F(" bytes"));
 
@@ -357,13 +353,11 @@ bool StringBox::resizeTicket(int *ticket, int newSize) {
     newSize += 3;
     int oldSize = 1;
     bool find = false;
-    int firstAddress = -1; // begin (index)
     int lastAddress = -1; // end (index)
 
     for(int i = 0; i < memoryLength; i++) {
         if(memory[i] == *ticket) {
             if(!find) {
-                firstAddress = i;
                 find = !find;
             } else {
                 lastAddress = i;

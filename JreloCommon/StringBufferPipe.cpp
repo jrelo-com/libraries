@@ -10,7 +10,7 @@ void StringBufferPipe::push(char c) {
 	buffer->append(c);
 }
 
-void StringBufferPipe::push(char *str) {
+void StringBufferPipe::push(const char *str) {
 	buffer->appendString(str);
 }
 

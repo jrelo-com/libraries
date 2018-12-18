@@ -1,6 +1,6 @@
 #include <ATCommandExecutorModule.h>
 
-ATCommandExecutorModule::ATCommandExecutorModule(char *key, ATCommandExecutor *atEx, StringBox *stringBox) : Module(key){
+ATCommandExecutorModule::ATCommandExecutorModule(const char *key, ATCommandExecutor *atEx, StringBox *stringBox) : Module(key){
 	this->atEx = atEx;
 	this->inputBuffer  = new StringBuffer(stringBox);
 	this->outputBuffer = new StringBuffer(stringBox);
@@ -12,7 +12,7 @@ ATCommandExecutorModule::~ATCommandExecutorModule(){
 	delete this->outputBuffer;
 }
 
-void ATCommandExecutorModule::inputData(char *data){
+void ATCommandExecutorModule::inputData(const char *data){
 	this->inputBuffer->clear(); 
 	this->inputBuffer->appendString(data);
 	this->needActionFlag = true;
@@ -31,8 +31,11 @@ void ATCommandExecutorModule::update() {
 				
 	this->needActionFlag = false;	
 	
-	char *data = inputBuffer->toString();
-	char *part = strtok(data, "&");	
+	const char *data = inputBuffer->toString();
+	char str[strlen(data)+1] = {0};
+	strcpy(str, data);
+	
+	char *part = strtok(str, "&");	
 	
 	while(part != NULL) {
 				
@@ -56,7 +59,7 @@ void ATCommandExecutorModule::update() {
 		
 		buffer0.clear();
 		cmd.appendString(AT_END_LINE);
-		atEx->sendAndCheck(&cmd, &buffer0, pat.toString(), 15000, 15000);
+		atEx->sendAndCheck(&cmd, &buffer0, pat.toString(), NULL, 15000, 15000);
 								
 		
 		StringBufferUtils::escapeQuotes(&buffer0, outputBuffer);

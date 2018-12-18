@@ -9,7 +9,7 @@ bool Module::isFeedback() {
     return feedbackFlag;
 }
 
-char* Module::getKey() {
+const char* Module::getKey() {
     return key;
 }
 
@@ -37,7 +37,7 @@ bool Module::needToInform() {
     return informFlag;
 }
 
-Module::Module(char *key){
+Module::Module(const char *key){
 	this->key = key;
 }
 

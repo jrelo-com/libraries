@@ -1,6 +1,6 @@
 /*
  * AUTHOR  : vladyslav.hubin.1989@gmail.com
- * VERSION : 1.1.0
+ * VERSION : 1.1.1
  * */
  
 #pragma once
@@ -19,10 +19,10 @@ class GSMUnitInfoModule : public Module {
 
     public :
 
-        GSMUnitInfoModule(char *key, SIMX *simx);
+        GSMUnitInfoModule(const char *key, SIMX *simx);
         ~GSMUnitInfoModule();
         void update();
-        void inputData(char *data);
+        void inputData(const char *data);
         void outputData(Pipe *pipe);
 
 };

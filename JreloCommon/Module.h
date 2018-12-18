@@ -1,6 +1,6 @@
 /*
  * AUTHOR  : vladyslav.hubin.1989@gmail.com
- * VERSION : 1.0.0
+ * VERSION : 1.0.1
  * */
 
 #pragma once
@@ -11,14 +11,14 @@ class Module {
 
   private :
 
-    char *key = NULL;
+    const char *key = NULL;
     bool applyFlag = false;
     bool informFlag = true;
     bool feedbackFlag = true; 
 
   public :
 	
-    char* getKey();
+    const char* getKey();
     void apply();
     bool needToApply();
     void applied();
@@ -28,9 +28,9 @@ class Module {
     void setFeedback(bool flag); 
     bool isFeedback();
     
-    Module(char *key);
+    Module(const char *key);
     virtual ~Module();
-    virtual void inputData(char *data) = 0;
+    virtual void inputData(const char *data) = 0;
     virtual void outputData(Pipe *pipe) = 0;
     virtual void update() = 0;
 

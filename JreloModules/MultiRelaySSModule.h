@@ -1,6 +1,6 @@
 /*
  * AUTHOR  : vladyslav.hubin.1989@gmail.com
- * VERSION : 1.0.0
+ * VERSION : 1.0.1
  * */
 
 #pragma once
@@ -24,7 +24,7 @@ class MultiRelaySSModule : public Module {
 
     public :
 
-        MultiRelaySSModule(char *key, int *ports, int count, int address, bool inversion = true);
+        MultiRelaySSModule(const char *key, int *ports, int count, int address, bool inversion = true);
         ~MultiRelaySSModule();
         
         bool getValue(int port);
@@ -32,7 +32,7 @@ class MultiRelaySSModule : public Module {
         void setValue(int port, bool value);
         void setValueByIndex(int index, bool value);
         
-        void inputData(char *data);
+        void inputData(const char *data);
         void outputData(Pipe *pipe);
         void update();
 

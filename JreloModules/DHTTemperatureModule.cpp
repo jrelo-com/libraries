@@ -1,6 +1,6 @@
 #include <DHTTemperatureModule.h>
 
-DHTTemperatureModule::DHTTemperatureModule(char *key, DHT *dht) : Module(key) {
+DHTTemperatureModule::DHTTemperatureModule(const char *key, DHT *dht) : Module(key) {
     this->dht = dht;
 }
 
@@ -10,7 +10,7 @@ void DHTTemperatureModule::update() {
     }
 }
 
-void DHTTemperatureModule::inputData(char *data) {}
+void DHTTemperatureModule::inputData(const char *data) {}
 
 void DHTTemperatureModule::outputData(Pipe *pipe) {
 	

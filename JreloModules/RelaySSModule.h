@@ -1,6 +1,6 @@
 /*
  * AUTHOR  : vladyslav.hubin.1989@gmail.com
- * VERSION : 1.0.0
+ * VERSION : 1.0.1
  * */
 
 #pragma once
@@ -23,13 +23,13 @@ class RelaySSModule : public Module {
 
     public :
 
-        RelaySSModule(char *key, int pin, int addressbool, bool inversion = true);
+        RelaySSModule(const char *key, int pin, int address, bool inversion = true);
         ~RelaySSModule();
         
         void setValue(bool flag);
         bool getValue();
          
-        void inputData(char *data);
+        void inputData(const char *data);
         void outputData(Pipe *pipe);
         void update();
         

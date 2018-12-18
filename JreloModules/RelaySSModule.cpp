@@ -1,6 +1,6 @@
 #include <RelaySSModule.h>
 
-RelaySSModule::RelaySSModule(char *key, int pin, int addressbool, bool inversion) : Module(key) {
+RelaySSModule::RelaySSModule(const char *key, int pin, int address, bool inversion) : Module(key) {
     this->pin = pin;
     this->inversion = inversion;
     this->address = address;
@@ -18,7 +18,7 @@ void RelaySSModule::update() {
 
 RelaySSModule::~RelaySSModule() {}
 
-void RelaySSModule::inputData(char *data) {
+void RelaySSModule::inputData(const char *data) {
     this->value = data && strcmp(data, "true") == 0;
     digitalWrite(pin, inversion?!value:value);
 	saveValue();

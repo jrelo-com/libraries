@@ -1,6 +1,6 @@
 #include <GSMUnitInfoModule.h>
 
-GSMUnitInfoModule::GSMUnitInfoModule(char *key, SIMX *simx) : Module(key){
+GSMUnitInfoModule::GSMUnitInfoModule(const char *key, SIMX *simx) : Module(key){
 	this->simx = simx;
 }
 
@@ -12,7 +12,7 @@ void GSMUnitInfoModule::update() {
 	}
 }
 
-void GSMUnitInfoModule::inputData(char *data) {}
+void GSMUnitInfoModule::inputData(const char *data) {}
 
 void GSMUnitInfoModule::outputData(Pipe *pipe) {
 	char temp[5] = {0};

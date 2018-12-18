@@ -1,7 +1,7 @@
 #include <DallasTemperatureModule.h>
 
 
-DallasTemperatureModule::DallasTemperatureModule(char *key, DallasTemperature *sensors, int index) : Module(key) {
+DallasTemperatureModule::DallasTemperatureModule(const char *key, DallasTemperature *sensors, int index) : Module(key) {
     this->sensors = sensors;
     this->index = index;
 }
@@ -14,7 +14,7 @@ void DallasTemperatureModule::update() {
 
 DallasTemperatureModule::~DallasTemperatureModule() {}
 
-void DallasTemperatureModule::inputData(char *data) {}
+void DallasTemperatureModule::inputData(const char *data) {}
 
 void DallasTemperatureModule::outputData(Pipe *pipe) {
 	sensors->requestTemperatures();

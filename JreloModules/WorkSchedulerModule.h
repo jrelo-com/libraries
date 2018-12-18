@@ -1,6 +1,6 @@
 /*
  * AUTHOR  : vladyslav.hubin.1989@gmail.com
- * VERSION : 1.0.0
+ * VERSION : 1.0.1
  * */
 
 #pragma once
@@ -36,12 +36,12 @@ class WorkSchedulerModule : public Module {
 			
 	public :
 	
-		WorkSchedulerModule(char *key, TimeProvider *timeProvider, int firstAddress);
+		WorkSchedulerModule(const char *key, TimeProvider *timeProvider, int firstAddress);
         ~WorkSchedulerModule();
         
         bool event();
                 
-        void inputData(char *data);
+        void inputData(const char *data);
         void outputData(Pipe *pipe);
         void update();
 	

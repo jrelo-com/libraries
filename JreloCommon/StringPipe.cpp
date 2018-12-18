@@ -10,7 +10,7 @@ void StringPipe::push(char c) {
 	(*this->str) += c;
 }
 
-void StringPipe::push(char *str) {
+void StringPipe::push(const char *str) {
 	(*this->str) += str;
 }
 

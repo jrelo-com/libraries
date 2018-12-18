@@ -24,8 +24,10 @@ void ATCommandExecutor::send(StringBuffer *cmd) {
 
 void ATCommandExecutor::flush() {
     while(hs->available()) {
-        int data = hs->read();
+		int data = hs->read();
+        
 #ifdef DEBUG
+		
         Serial.println(F("AT. Flush"));
         Serial.println((char)data);
         Serial.println(F("~~~~~~~~~~"));
@@ -34,12 +36,12 @@ void ATCommandExecutor::flush() {
 }
 
 
-bool ATCommandExecutor::sendAndCheck(StringBuffer *cmd, char *firstPattern, char *secondPattern, uint32_t fullTimeout, uint32_t charTimeout) {
+bool ATCommandExecutor::sendAndCheck(StringBuffer *cmd, const char *firstPattern, const char *secondPattern, uint32_t fullTimeout, uint32_t charTimeout) {
 	return sendAndCheck(cmd, NULL, firstPattern, secondPattern, fullTimeout, charTimeout);
 }
 
 
-bool ATCommandExecutor::sendAndCheck(StringBuffer *cmd, StringBuffer *responseBuffer, char *firstPattern, char *secondPattern, uint32_t fullTimeout, uint32_t charTimeout) {
+bool ATCommandExecutor::sendAndCheck(StringBuffer *cmd, StringBuffer *responseBuffer, const char *firstPattern, const char *secondPattern, uint32_t fullTimeout, uint32_t charTimeout) {
     flush();
     send(cmd);
 	
@@ -50,7 +52,7 @@ bool ATCommandExecutor::sendAndCheck(StringBuffer *cmd, StringBuffer *responseBu
 }
 
 
-bool ATCommandExecutor::sendAndCheck(const char *cmd, StringBuffer *responseBuffer, char *firstPattern, char *secondPattern, uint32_t fullTimeout, uint32_t charTimeout) {
+bool ATCommandExecutor::sendAndCheck(const char *cmd, StringBuffer *responseBuffer, const char *firstPattern, const char *secondPattern, uint32_t fullTimeout, uint32_t charTimeout) {
     flush();
     send(cmd);
 
@@ -61,12 +63,12 @@ bool ATCommandExecutor::sendAndCheck(const char *cmd, StringBuffer *responseBuff
 }
 
 
-bool ATCommandExecutor::sendAndCheck(const char *cmd, char *firstPattern, char *secondPattern, uint32_t fullTimeout, uint32_t charTimeout ) {
+bool ATCommandExecutor::sendAndCheck(const char *cmd, const char *firstPattern, const char *secondPattern, uint32_t fullTimeout, uint32_t charTimeout ) {
     return sendAndCheck(cmd, NULL, firstPattern, secondPattern, fullTimeout, charTimeout);
 }
 
 
-bool ATCommandExecutor::readAndCheck(StringBuffer *responseBuffer, char *firstPattern, char *secondPattern, uint32_t fullTimeout, uint32_t charTimeout) {
+bool ATCommandExecutor::readAndCheck(StringBuffer *responseBuffer, const char *firstPattern, const char *secondPattern, uint32_t fullTimeout, uint32_t charTimeout) {
     delay(DELAY);
     
     uint16_t length = strlen(firstPattern);

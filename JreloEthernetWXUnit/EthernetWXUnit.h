@@ -1,6 +1,6 @@
 /*
  * AUTHOR  : vladyslav.hubin.1989@gmail.com
- * VERSION : 1.1.0
+ * VERSION : 1.1.1
  * */
 
 #pragma once
@@ -13,7 +13,7 @@
 #include <WebSocketClient.h>
 #include <SimpleTimer.h>
 
-#define DEBUG true
+#define DEBUG 
 
 class EthernetWXUnit : public XUnit {
 

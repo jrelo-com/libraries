@@ -20,7 +20,7 @@ void LcdAdapter::init(){
     this->lcd->backlight();
 }
 
-void LcdAdapter::print(char *text, int row) {
+void LcdAdapter::print(const char *text, int row) {
     init();
     
     strcpy(this->temp[row], text);
@@ -33,7 +33,7 @@ void LcdAdapter::print(char *text, int row) {
     }
 }
 
-void LcdAdapter::print(char *prefix, char *text, int row) {
+void LcdAdapter::print(const char *prefix, const char *text, int row) {
 	init();
 	
     strcpy(this->temp[row], prefix);

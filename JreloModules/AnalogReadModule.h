@@ -1,6 +1,6 @@
 /*
  * AUTHOR  : vladyslav.hubin.1989@gmail.com
- * VERSION : 1.0.0
+ * VERSION : 1.0.1
  * */
 
 #pragma once
@@ -18,9 +18,9 @@ class AnalogReadModule : public Module {
 
     public :
 
-        AnalogReadModule(char *key, int port);
+        AnalogReadModule(const char *key, int port);
         ~AnalogReadModule();
-        void inputData(char *data);
+        void inputData(const char *data);
         void outputData(Pipe *pipe);
         void update();
 

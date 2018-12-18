@@ -1,6 +1,6 @@
 /*
  * AUTHOR  : vladyslav.hubin.1989@gmail.com
- * VERSION : 1.0.0
+ * VERSION : 1.0.1
  * */
 
 #pragma once
@@ -30,15 +30,15 @@ class StringBuffer {
     
     StringBuffer(StringBox *stringBox, int bufferSize);
     
-    StringBuffer(StringBox *stringBox, char *string);
+    StringBuffer(StringBox *stringBox, const char *string);
 
     ~StringBuffer();
 
     bool append(char c);
 
-    bool appendString(char *string);
+    bool appendString(const char *string);
 
-    char* toString();
+    const char* toString();
 
     void clear();
 

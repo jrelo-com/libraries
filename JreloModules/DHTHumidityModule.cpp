@@ -1,6 +1,6 @@
 #include <DHTHumidityModule.h>
 
-DHTHumidityModule::DHTHumidityModule(char *key, DHT *dht): Module(key) {
+DHTHumidityModule::DHTHumidityModule(const char *key, DHT *dht): Module(key) {
     this->dht = dht;
 }
 
@@ -10,7 +10,7 @@ void DHTHumidityModule::update() {
     }
 }
 
-void DHTHumidityModule::inputData(char *data) {}
+void DHTHumidityModule::inputData(const char *data) {}
 
 void DHTHumidityModule::outputData(Pipe *pipe) {
 		

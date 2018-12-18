@@ -1,6 +1,6 @@
 #include <EventSchedulerModule.h>
 
-EventSchedulerModule::EventSchedulerModule(char *key, TimeProvider *timeProvider, int firstAddress) : Module(key) {
+EventSchedulerModule::EventSchedulerModule(const char *key, TimeProvider *timeProvider, int firstAddress) : Module(key) {
     this->timeProvider = timeProvider;
     this->firstAddress = firstAddress;
 }
@@ -32,9 +32,11 @@ void EventSchedulerModule::reset() {
     eventFlag = false;
 }
 
-void EventSchedulerModule::inputData(char *data) {
-
-    char *temp = strtok(data, ":");
+void EventSchedulerModule::inputData(const char *data) {
+	char str[strlen(data)+1] = {0};
+	strcpy(str, data);
+	
+    char *temp = strtok(str, ":");
     hour = (byte)TypeConverter::charArrayToInt(temp);
 
     temp = strtok(NULL, ":");

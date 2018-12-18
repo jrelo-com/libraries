@@ -1,6 +1,6 @@
 /*
  * AUTHOR  : vladyslav.hubin.1989@gmail.com
- * VERSION : 1.0.0
+ * VERSION : 1.0.1
  * */
 
 #pragma once
@@ -19,9 +19,9 @@ class DHTHumidityModule : public Module {
 
     public :
     
-        DHTHumidityModule(char *key, DHT *dht);
+        DHTHumidityModule(const char *key, DHT *dht);
         ~DHTHumidityModule();
-        void inputData(char *data);
+        void inputData(const char *data);
         void outputData(Pipe *pipe);
         void update();
 

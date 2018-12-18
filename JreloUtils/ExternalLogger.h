@@ -1,6 +1,6 @@
 /*
  * AUTHOR  : vladyslav.hubin.1989@gmail.com
- * VERSION : 1.0.0
+ * VERSION : 1.0.1
  * */
 
 #pragma once
@@ -16,14 +16,14 @@ class ExternalLogger {
 
 	private :
 	
-		char *fileName = NULL;
+		const char *fileName = NULL;
 		HardwareSerial *hs = NULL;
 		StringBuffer *stringBuffer = NULL;
 		SimpleTimer simpleTimer = SimpleTimer(30000);
 	
 	public :
 	
-		ExternalLogger(char *fileName, HardwareSerial *hs, StringBox *stringBox);
+		ExternalLogger(const char *fileName, HardwareSerial *hs, StringBox *stringBox);
 		void update();
 		void init();
 	

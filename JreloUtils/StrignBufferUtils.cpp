@@ -1,6 +1,6 @@
 #include <StringBufferUtils.h>
 
-static bool StringBufferUtils::concatination(StringBuffer *source, StringBuffer *destination) {
+bool StringBufferUtils::concatination(StringBuffer *source, StringBuffer *destination) {
     if(!destination->appendString(source->toString())) {
         return false;
     }
@@ -8,10 +8,9 @@ static bool StringBufferUtils::concatination(StringBuffer *source, StringBuffer 
     return source->trim();
 }
 
-static bool StringBufferUtils::substringBetween(StringBuffer *source, StringBuffer *out, char *firstPattern, char *secondPattern) {
+bool StringBufferUtils::substringBetween(StringBuffer *source, StringBuffer *out, const char *firstPattern, const char *secondPattern) {
 
-
-    char *s = source->toString();
+    const char *s = source->toString();
 
     char *start = strstr(s, firstPattern);
     if(start == NULL) {
@@ -43,8 +42,8 @@ static bool StringBufferUtils::substringBetween(StringBuffer *source, StringBuff
     return true;
 }
 
-static int StringBufferUtils::search(StringBuffer *source, char *pattern) {
-    char *s = source->toString();
+int StringBufferUtils::search(StringBuffer *source, const char *pattern) {
+    const char *s = source->toString();
 
     char *start = strstr(s, pattern);
 
@@ -54,8 +53,8 @@ static int StringBufferUtils::search(StringBuffer *source, char *pattern) {
     return start - s;
 }
 
-static int StringBufferUtils::tailSearch(StringBuffer *source, char *pattern) {
-    char *s = source->toString();
+int StringBufferUtils::tailSearch(StringBuffer *source, const char *pattern) {
+    const char *s = source->toString();
     int index0 = source->size() - 1;
     int length = strlen(pattern);
     int index1 = length -1;
@@ -76,11 +75,10 @@ static int StringBufferUtils::tailSearch(StringBuffer *source, char *pattern) {
     return -1;
 }
 
-static bool StringBufferUtils::substring(StringBuffer *source, StringBuffer *out, int first, int last) {
+bool StringBufferUtils::substring(StringBuffer *source, StringBuffer *out, int first, int last) {
 
-    char *s = source->toString();
+    const char *s = source->toString();
 
-    int length = last - first;
     for(int i = first, j=0; i < last; i++, j++) {
         if(!out->append(s[i])) {
             return false;
@@ -90,8 +88,8 @@ static bool StringBufferUtils::substring(StringBuffer *source, StringBuffer *out
     return out->trim();
 }
 
-static bool StringBufferUtils::escapeQuotes(StringBuffer *source, StringBuffer *out) {
-    char *s = source->toString();
+bool StringBufferUtils::escapeQuotes(StringBuffer *source, StringBuffer *out) {
+    const char *s = source->toString();
 
     bool result = true;
     for(int i=0; i < source->size(); i++) {

@@ -1,6 +1,6 @@
 /*
  * AUTHOR  : vladyslav.hubin.1989@gmail.com
- * VERSION : 1.0.0
+ * VERSION : 1.0.1
  * */
 
 #pragma once
@@ -20,8 +20,8 @@ class Unit {
         LList<Module> *modules = new LList<Module>;
         virtual bool getData(String *body) = 0;
         virtual bool postData(String *body) = 0;
-        char *connectionPassword = NULL;
-        char *uuid = NULL;     
+        const char *connectionPassword = NULL;
+        const char *uuid = NULL;     
         void executor(String *json);
         void updateValuesInModules();
         void getRequest() ;

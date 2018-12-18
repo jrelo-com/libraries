@@ -1,6 +1,6 @@
 /*
  * AUTHOR  : vladyslav.hubin.1989@gmail.com
- * VERSION : 1.0.0
+ * VERSION : 1.0.1
  * */
 
 #pragma once
@@ -18,7 +18,7 @@ class StringPipe : public Pipe {
 		StringPipe(String *str);
 		~StringPipe();
 		void push(char c);
-		void push(char *str);
+		void push(const char *str);
 		void push(String *str);
 
 };

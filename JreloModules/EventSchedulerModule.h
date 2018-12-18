@@ -1,6 +1,6 @@
 /*
  * AUTHOR  : vladyslav.hubin.1989@gmail.com
- * VERSION : 1.0.0
+ * VERSION : 1.0.1
  * */
 
 #pragma once
@@ -33,13 +33,13 @@ class EventSchedulerModule : public Module {
 			
 	public :
 	
-		EventSchedulerModule(char *key, TimeProvider *timeProvider, int firstAddress);
+		EventSchedulerModule(const char *key, TimeProvider *timeProvider, int firstAddress);
         ~EventSchedulerModule();
         
         void reset();
         bool event();
         
-        void inputData(char *data);
+        void inputData(const char *data);
         void outputData(Pipe *pipe);
         void update();
 	

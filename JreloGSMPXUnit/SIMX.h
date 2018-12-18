@@ -1,6 +1,6 @@
 /*
  * AUTHOR  : vladyslav.hubin.1989@gmail.com
- * VERSION : 2.2.0
+ * VERSION : 2.2.1
  * */
  
 #pragma once
@@ -63,10 +63,10 @@ class SIMX : public LocationProvider {
 
 		StringBox *stringBox = NULL;
         ATCommandExecutor *atEx = NULL;
-        char *PIN = NULL;
-        char *APN = NULL;
-        char *url = NULL;
-        char *headers = NULL;
+        const char *PIN = NULL;
+        const char *APN = NULL;
+        const char *url = NULL;
+        const char *headers = NULL;
         uint8_t powerPin = 0;
         uint8_t resetPin = 0;
         uint8_t errorCounter = 0;
@@ -90,7 +90,7 @@ class SIMX : public LocationProvider {
 		void powerOn();
 		void powerOff();
 		void restart();
-		void errorProcessing(Action lastFailureAction, char *message = NULL);
+		void errorProcessing(Action lastFailureAction, const char *message = NULL);
         void successProcessing(Action lastSuccessfulAction);
 		void checkErrors();
 		bool checkSignal();
@@ -129,11 +129,11 @@ class SIMX : public LocationProvider {
 		void setStringBox(StringBox *stringBox);
 		void useHTTPS(bool flag);
 		bool isHTTPSUsed();
-        void setPIN(char *PIN);
+        void setPIN(const char *PIN);
         void setResetPin(uint8_t resetPin);
-        void setAPN(char *APN);
-        void setUrl(char *url);
-        void setHeaders(char *headers);
+        void setAPN(const char *APN);
+        void setUrl(const char *url);
+        void setHeaders(const char *headers);
         ATCommandExecutor* getAtCmdEx();
         uint8_t getSignalQuality();
         uint16_t getVoltage();

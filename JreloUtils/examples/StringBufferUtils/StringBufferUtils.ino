@@ -55,8 +55,8 @@ void setup() {
     Serial.println(F("\r\n\r\nMethod => bool substringBetween(StringBuffer *source, StringBuffer *out, char *firstPatter, char *secondPattern)"));
     
     buffer0.appendString("text >>>AREA<<< text");
-    char *firstPattern = ">>>";
-    char *secondPattern = "<<<";
+    const char *firstPattern = ">>>";
+    const char *secondPattern = "<<<";
     Serial.print(F("source => "));
     Serial.println(buffer0.toString());
     Serial.print(F("out => "));
@@ -98,7 +98,7 @@ void setup() {
     Serial.println(F("\r\n\r\nMethod => int search(StringBuffer *source, char *pattern)"));
 
     buffer0.appendString("#abc 123AREA123 xyz$$");
-    char *pattern = "123";
+    const char *pattern = "123";
     Serial.print(F("source => "));
     Serial.println(buffer0.toString());
     Serial.print(F("pattern => "));

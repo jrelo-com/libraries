@@ -1,6 +1,6 @@
 #include <WorkSchedulerModule.h>
 
-WorkSchedulerModule::WorkSchedulerModule(char *key, TimeProvider *timeProvider, int firstAddress) : Module(key) {
+WorkSchedulerModule::WorkSchedulerModule(const char *key, TimeProvider *timeProvider, int firstAddress) : Module(key) {
     this->timeProvider = timeProvider;
     this->firstAddress = firstAddress;
 }
@@ -32,9 +32,13 @@ void WorkSchedulerModule::init() {
 }
 
 
-void WorkSchedulerModule::inputData(char *data) {
+void WorkSchedulerModule::inputData(const char *data) {
 
-    char *temp = strtok(data, ":");
+    char str[strlen(data)+1] = {0};
+	strcpy(str, data);
+	
+    char *temp = strtok(str, ":");
+    
     startHour = (byte)TypeConverter::charArrayToInt(temp);
 
     temp = strtok(NULL, ":");

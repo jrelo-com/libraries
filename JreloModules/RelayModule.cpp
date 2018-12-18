@@ -1,6 +1,6 @@
 #include <RelayModule.h>
 
-RelayModule::RelayModule(char *key, int pin, bool inversion) : Module(key) {
+RelayModule::RelayModule(const char *key, int pin, bool inversion) : Module(key) {
     this->pin = pin;
     this->inversion = inversion;
 }
@@ -16,7 +16,7 @@ void RelayModule::update() {
 
 RelayModule::~RelayModule() {}
 
-void RelayModule::inputData(char *data) {
+void RelayModule::inputData(const char *data) {
     this->value = data && strcmp(data, "true") == 0;
     digitalWrite(pin, inversion?!value:value);
 }

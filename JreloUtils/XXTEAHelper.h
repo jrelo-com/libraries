@@ -1,6 +1,6 @@
 /*
  * AUTHOR  : vladyslav.hubin.1989@gmail.com
- * VERSION : 1.0.0
+ * VERSION : 1.0.1
  * */
 
 #pragma once
@@ -11,9 +11,9 @@ class XXTEAHelper {
 
     public :
 
-        static char* decryptData(char *data, int dataLength, char *encryptionPassword);
+        static char* decryptData(const char *data, int dataLength, const char *encryptionPassword);
 
-        static char* encryptData(char *data, int dataLength, char *encryptionPassword);
+        static char* encryptData(const char *data, int dataLength, const char *encryptionPassword);
 
 };
 

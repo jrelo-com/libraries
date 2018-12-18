@@ -1,13 +1,13 @@
 #include <MultiRelaySSModule.h>
 
-MultiRelaySSModule::MultiRelaySSModule(char *key, int *ports, int count, int address, bool inversion) : Module(key) {
+MultiRelaySSModule::MultiRelaySSModule(const char *key, int *ports, int count, int address, bool inversion) : Module(key) {
     this->ports = ports;
     this->count = count;
     this->inversion = inversion;
     this->address = address;
 }
 
-void MultiRelaySSModule::inputData(char *data) {
+void MultiRelaySSModule::inputData(const char *data) {
     int val = atoi(data);
 
     for(int i=0; i < count; i++) {

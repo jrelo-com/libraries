@@ -1,6 +1,6 @@
 /*
  * AUTHOR  : vladyslav.hubin.1989@gmail.com
- * VERSION : 2.1.0
+ * VERSION : 2.1.1
  * */
  
 #pragma once
@@ -23,10 +23,10 @@ class ATCommandExecutorModule : public Module {
 
     public :
 
-        ATCommandExecutorModule(char *key, ATCommandExecutor *atEx, StringBox *stringBox);
+        ATCommandExecutorModule(const char *key, ATCommandExecutor *atEx, StringBox *stringBox);
         ~ATCommandExecutorModule();
         void update();
-        void inputData(char *data);
+        void inputData(const char *data);
         void outputData(Pipe *pipe);
 
 };

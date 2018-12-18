@@ -1,6 +1,6 @@
 #include <LifetimeModule.h>
 
-LifetimeModule::LifetimeModule(char *key) : Module(key) {}
+LifetimeModule::LifetimeModule(const char *key) : Module(key) {}
 
 LifetimeModule::~LifetimeModule() {}
 
@@ -10,7 +10,7 @@ void LifetimeModule::update() {
     }
 }
 
-void LifetimeModule::inputData(char *data) {}
+void LifetimeModule::inputData(const char *data) {}
 
 void LifetimeModule::outputData(Pipe *pipe) {
 	

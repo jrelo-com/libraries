@@ -1,6 +1,6 @@
 /*
  * AUTHOR  : vladyslav.hubin.1989@gmail.com
- * VERSION : 1.0.0
+ * VERSION : 1.0.1
  * */
 #pragma once
 #include <Arduino.h>
@@ -18,9 +18,9 @@ class DHTTemperatureModule : public Module {
 
     public :
 
-        DHTTemperatureModule(char *key, DHT *dht);
+        DHTTemperatureModule(const char *key, DHT *dht);
         ~DHTTemperatureModule();
-        void inputData(char *data);
+        void inputData(const char *data);
         void outputData(Pipe *pipe);
         void update();
 

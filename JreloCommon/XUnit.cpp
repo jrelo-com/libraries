@@ -1,6 +1,6 @@
 #include <XUnit.h>
 
-void XUnit::executor(char *json) {
+void XUnit::executor(const char *json) {
 
 #ifdef DEBUG
     Serial.print(F("download. json : "));
@@ -13,7 +13,7 @@ void XUnit::executor(char *json) {
     JsonStreamingParser parser;
     parser.setListener(&listener);
 
-    for (int i = 0; i < strlen(json); i++) {
+    for (unsigned int i = 0; i < strlen(json); i++) {
         parser.parse(json[i]);
     }
     parser.reset();
@@ -40,14 +40,12 @@ void XUnit::getRequest() {
     StringBuffer sb = StringBuffer(&stringBox);
     bool result = getData(&sb);
 
-#ifdef DEBUG
     Serial.print(F("GET data - "));
     if(result) {
-        Serial.printlnF("Success"));
+        Serial.println(F("Success"));
     } else {
-        Serial.printlnF("Failure"));
+        Serial.println(F("Failure"));
     }
-#endif
 
     if (!result) {
         return;
@@ -111,14 +109,12 @@ void XUnit::prepareOutgoingData() {
     }
 
     bool result = postData(&sb);
-#ifdef DEBUG
     Serial.print(F("POST data - "));
     if(result) {
-        Serial.printlnF("Success"));
+        Serial.println(F("Success"));
     } else {
-        Serial.printlnF("Failure"));
+        Serial.println(F("Failure"));
     }
-#endif
 }
 
 bool XUnit::needToSend() {
@@ -137,8 +133,8 @@ void XUnit::useEncryption(bool encryption) {
     this->encryption = encryption;
 }
 
-void XUnit::setEncryptionPassword(char *encryptionPassword) {
-    strcpy(this->encryptionPassword, encryptionPassword);
+void XUnit::setEncryptionPassword(const char *encryptionPassword) {
+    this->encryptionPassword = encryptionPassword;
 }
 
 void XUnit::putModule(Module *module) {

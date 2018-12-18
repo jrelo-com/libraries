@@ -74,7 +74,7 @@ bool EthernetPUnit::postData(String *body) {
     return true;
 }
 
-int EthernetPUnit::statusCode(char *response) {
+int EthernetPUnit::statusCode(const char *response) {
     char *temp = strstr(response, " ");
     int space = temp - response + 1;
 
@@ -85,7 +85,7 @@ int EthernetPUnit::statusCode(char *response) {
 }
 
 
-int EthernetPUnit::findHttpBody(char *response) {
+int EthernetPUnit::findHttpBody(const char *response) {
     char *temp = strstr(response, "\r\n\r\n");
     return temp - response + 4;
 }

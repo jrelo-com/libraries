@@ -8,7 +8,7 @@ TimeModule::TimeModule(int timeZoneOffset) : Module("$ts") {
 
 TimeModule::~TimeModule() {}
 
-void TimeModule::inputData(char *data) {
+void TimeModule::inputData(const char *data) {
     readyFlag = true;
 
     timeFromService = TypeConverter::charArrayToUnsignedLong(data);

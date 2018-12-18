@@ -1,6 +1,6 @@
 /*
  * AUTHOR  : vladyslav.hubin.1989@gmail.com
- * VERSION : 1.0.0
+ * VERSION : 1.0.1
  * */
 
 #pragma once
@@ -22,7 +22,7 @@ class LcdAdapter {
     
         LcdAdapter(int address, int len, int row);
         ~LcdAdapter();
-        void print(char *text, int row);
-        void print(char *prefix, char *text, int row);
+        void print(const char *text, int row);
+        void print(const char *prefix, const char *text, int row);
 
 };

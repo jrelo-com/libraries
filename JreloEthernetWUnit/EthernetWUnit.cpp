@@ -19,9 +19,9 @@ bool EthernetWUnit::ethernetInit() {
 }
 
 void EthernetWUnit::prepare() {
-    webSocketClient.userAgent = userAgent;
-    webSocketClient.host = host;
-    webSocketClient.connectionPassword = connectionPassword;
+    webSocketClient.userAgent = (char*)userAgent;
+    webSocketClient.host = (char*)host;
+    webSocketClient.connectionPassword = (char*)connectionPassword;
 
     strcpy(this->path, "/api/v1/unit/");
     strcat(this->path, uuid);
@@ -31,7 +31,7 @@ void EthernetWUnit::prepare() {
 bool EthernetWUnit::connection() {
 
     if(!ethernetReadyFlag)
-        return;
+        return false;
 
     if (ethernetClient.connect(host, 8181)) {
 #ifdef DEBUG
@@ -95,6 +95,7 @@ bool EthernetWUnit::getData(String *data) {
 
 bool EthernetWUnit::postData(String *data) {
     this->webSocketClient.sendData(*data);
+	return true;
 }
 
 EthernetWUnit::EthernetWUnit(const char *uuid, const char *connectionPassword, byte *mac) {

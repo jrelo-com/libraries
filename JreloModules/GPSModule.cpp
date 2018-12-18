@@ -1,6 +1,6 @@
 #include <GPSModule.h>
 
-GPSModule::GPSModule(char *key, LocationProvider *locationProvider) : Module(key) {
+GPSModule::GPSModule(const char *key, LocationProvider *locationProvider) : Module(key) {
     this->locationProvider = locationProvider;
 }
 
@@ -12,7 +12,7 @@ void GPSModule::update() {
         inform();
 }
 
-void GPSModule::inputData(char *data) {}
+void GPSModule::inputData(const char *data) {}
 
 void GPSModule::outputData(Pipe *pipe) {
     

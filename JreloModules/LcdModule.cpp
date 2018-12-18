@@ -1,7 +1,7 @@
 #include <LcdModule.h>
 
 
-LcdModule::LcdModule(char *key, LcdAdapter *lcdAdapter, int row) : 	Module(key) {
+LcdModule::LcdModule(const char *key, LcdAdapter *lcdAdapter, int row) : 	Module(key) {
     this->setFeedback(false);
     this->lcdAdapter = lcdAdapter;
     this->row = row;
@@ -11,7 +11,7 @@ LcdModule::~LcdModule() {
     delete lcdAdapter;
 }
 
-void LcdModule::inputData(char *data) {
+void LcdModule::inputData(const char *data) {
 	this->lcdAdapter->print(this->getKey(), data, this->row);
 }
 

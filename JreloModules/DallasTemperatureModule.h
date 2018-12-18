@@ -1,6 +1,6 @@
 /*
  * AUTHOR  : vladyslav.hubin.1989@gmail.com
- * VERSION : 1.0.0
+ * VERSION : 1.0.1
  * */
 
 #pragma once
@@ -20,9 +20,9 @@ class DallasTemperatureModule : public Module {
 
     public :
 
-        DallasTemperatureModule(char *key, DallasTemperature *sensors, int index);
+        DallasTemperatureModule(const char *key, DallasTemperature *sensors, int index);
         ~DallasTemperatureModule();
-        void inputData(char *data);
+        void inputData(const char *data);
         void outputData(Pipe *pipe);
         void update();
 

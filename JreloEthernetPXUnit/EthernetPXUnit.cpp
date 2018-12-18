@@ -69,7 +69,7 @@ bool EthernetPXUnit::postData(StringBuffer *body) {
     return true;
 }
 
-int EthernetPXUnit::statusCode(char *response) {
+int EthernetPXUnit::statusCode(const char *response) {
     char *temp = strstr(response, " ");
     int space = temp - response + 1;
 
@@ -80,7 +80,7 @@ int EthernetPXUnit::statusCode(char *response) {
 }
 
 
-int EthernetPXUnit::findHttpBody(char *response) {
+int EthernetPXUnit::findHttpBody(const char *response) {
     char *temp = strstr(response, "\r\n\r\n");
     return temp - response + 4;
 }

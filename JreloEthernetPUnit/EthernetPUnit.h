@@ -1,6 +1,6 @@
 /*
  * AUTHOR  : vladyslav.hubin.1989@gmail.com
- * VERSION : 1.0.0
+ * VERSION : 1.0.1
  * */
 
 #pragma once
@@ -29,8 +29,8 @@ class EthernetPUnit : public Unit {
 	
         bool getData(String *body);
         bool postData(String *body);
-        int statusCode(char *response) ;
-        int findHttpBody(char *response);
+        int statusCode(const char *response) ;
+        int findHttpBody(const char *response);
 
     public :
     

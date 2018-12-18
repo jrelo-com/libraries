@@ -161,11 +161,11 @@ void SIMX::update() {
 
 }
 
-void SIMX::setPIN(char *PIN) {
+void SIMX::setPIN(const char *PIN) {
     this->PIN = PIN;
 }
 
-void SIMX::setAPN(char *APN) {
+void SIMX::setAPN(const char *APN) {
     this->APN = APN;
 }
 
@@ -178,11 +178,11 @@ bool SIMX::isReady() {
     return networkFlag && GPRSConnectionFlag;
 }
 
-void SIMX::setUrl(char *url) {
+void SIMX::setUrl(const char *url) {
     this->url = url;
 }
 
-void SIMX::setHeaders(char *headers) {
+void SIMX::setHeaders(const char *headers) {
     this->headers = headers;
 }
 
@@ -206,7 +206,9 @@ bool SIMX::checkLocation(){
 	StringBuffer buffer1 = StringBuffer(stringBox);
 	StringBufferUtils::substringBetween(&buffer0, &buffer1, AT_COMMAND_26_PART_1, AT_END_LINE);
 
-	char *part = strtok(buffer1.toString(), COMMA);
+	char str[buffer1.size()+1] = {0};
+	strcpy(str, buffer1.toString());
+	char *part = strtok(str, COMMA);
 	uint8_t l = 0;	
 	
 	while(part != NULL && l != 2) {
@@ -265,7 +267,7 @@ bool SIMX::checkSIMBoard() {
     return atEx->sendAndCheck(AT_COMMAND_1, AT_OK, NULL, 2000, 2000);
 }
 
-void SIMX::errorProcessing(Action lastFailureAction, char *message) {
+void SIMX::errorProcessing(Action lastFailureAction, const char *message) {
     if(this->lastFailureAction != lastFailureAction) {
         this->lastFailureAction = lastFailureAction;
     }
@@ -516,7 +518,7 @@ bool SIMX::sendRequest(RequestMethod method, StringBuffer *body, uint16_t *httpS
 			return false;
 		}
 
-		int dataLength = -1;
+		uint16_t dataLength = -1;
 
 		if(getHttpStatusCodeAndDataLength(&buffer, httpStatusCode, &dataLength)) {
 			successProcessing(GET_HTTP_STATUS_CODE);

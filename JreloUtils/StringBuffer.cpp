@@ -14,7 +14,7 @@ bool StringBuffer::init() {
 	if(stringBox == NULL){
 		Serial.println(F("StringBuffer. StringBox not found !"));
 		delay(10000);
-		return;	
+		return false;	
 	}
 	
 	this->initFlag = true;
@@ -28,7 +28,7 @@ bool StringBuffer::init() {
     return true;
 }
 
-StringBuffer::StringBuffer(StringBox *stringBox, char *string) {
+StringBuffer::StringBuffer(StringBox *stringBox, const char *string) {
 	this->startLength = strlen(string) + 1;
 	this->stringBox = stringBox;
     this->appendString(string);
@@ -76,7 +76,7 @@ bool  StringBuffer::append(char c) {
     return true;
 }
 
-bool StringBuffer::appendString(char *string) {
+bool StringBuffer::appendString(const char *string) {
     int len = strlen(string);
     
     for (int i = 0; i < len; i++) {
@@ -88,7 +88,7 @@ bool StringBuffer::appendString(char *string) {
     return true;
 }
 
-char* StringBuffer::toString() {
+const char* StringBuffer::toString() {
     char *result = stringBox->getStringByTicket(this->ticket);
     if(result == NULL)
 		return "";
