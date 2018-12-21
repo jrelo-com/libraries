@@ -7,7 +7,6 @@
 #include <Arduino.h>
 #include <JsonListener.h>
 #include <Module.h>
-#include <LList.h>
 
 //~ #define DEBUG 
 
@@ -20,12 +19,13 @@ class UJsonListener : public JsonListener {
 
   private :
   
-    LList<Module> *modules = NULL;
+    Module **modules = NULL;
+    uint8_t *moduleCount = NULL;
     int index = 0;
 
   public :
 
-    void setModules(LList<Module> *modules);
+    void setModules(Module **modules, uint8_t *moduleCount);
 
     void key(String key);
 

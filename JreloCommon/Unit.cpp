@@ -1,5 +1,9 @@
 #include <Unit.h>
 
+void Unit::setKeysInMessage(uint8_t keysInMessage){
+	this->keysInMessage = keysInMessage;
+}
+
 void Unit::executor(String *json) {
 	
 #ifdef DEBUG
@@ -8,7 +12,7 @@ void Unit::executor(String *json) {
 #endif
 	
     UJsonListener listener;
-    listener.setModules(modules);
+    listener.setModules(modules, &moduleCount);
 
     JsonStreamingParser parser;
     parser.setListener(&listener);
@@ -20,15 +24,15 @@ void Unit::executor(String *json) {
 }
 
 void Unit::updateValuesInModules() {
-    for (int i = 0; i < modules->size(); i++) {
+    for (int i = 0; i < moduleCount; i++) {
+		Module *module = modules[i];
+        module->update();
 
-        modules->get(i)->update();
-
-        if (modules->get(i)->needToApply()) {
-            modules->get(i)->applied();
+        if (module->needToApply()) {
+            module->applied();
             
-            if(modules->get(i)->isFeedback())
-				modules->get(i)->inform();
+            if(module->isFeedback())
+				module->inform();
         }
     }
 }
@@ -66,10 +70,10 @@ void Unit::prepareOutgoingData() {
 	StringPipe pipe(&str); // adapter
 	
     str += '{';
-    for (int i = 0; i < modules->size(); i++) {
-        if (modules->get(i)->needToInform()) {
+    for (int i = 0; i < moduleCount; i++) {
+        if (modules[i]->needToInform()) {
 
-			Module *module = modules->get(i);
+			Module *module = modules[i];
 
             if (!first) {
                 str += ',';
@@ -103,8 +107,8 @@ void Unit::prepareOutgoingData() {
 bool Unit::needToSend() {
     bool result = false;
 
-    for (int i = 0; i < modules->size(); i++) {
-        if (modules->get(i)->needToInform()) {
+    for (int i = 0; i < moduleCount; i++) {
+        if (modules[i]->needToInform()) {
             result = true;
             break;
         }
@@ -113,9 +117,9 @@ bool Unit::needToSend() {
 }
 
 void Unit::putModule(Module *module) {
-    this->modules->add(module);
+    modules[moduleCount] = module;
+    moduleCount++;
 }
 
 Unit::~Unit(){
-	delete modules;
 }

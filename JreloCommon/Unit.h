@@ -5,7 +5,6 @@
 
 #pragma once
 #include <Arduino.h>
-#include <LList.h>
 #include <Module.h>
 #include <StringPipe.h>
 #include <UJsonListener.h>
@@ -17,7 +16,9 @@ class Unit {
 
     protected :
 
-        LList<Module> *modules = new LList<Module>;
+        Module *modules[12];
+        uint8_t moduleCount = 0;
+        
         virtual bool getData(String *body) = 0;
         virtual bool postData(String *body) = 0;
         const char *connectionPassword = NULL;
@@ -27,6 +28,9 @@ class Unit {
         void getRequest() ;
         void prepareOutgoingData();
         bool needToSend();
+        
+        uint8_t keysInMessage = 12; //maximum number of keys in the message.
+        uint8_t numberOfUnsentKeys = 0; 
 
 	public :
 
@@ -35,6 +39,7 @@ class Unit {
         virtual ~Unit();
 
         void putModule(Module *module);
+        void setKeysInMessage(uint8_t keysInMessage);
  
 };
 
