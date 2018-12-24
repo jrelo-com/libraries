@@ -83,11 +83,11 @@ void EthernetWUnit::connectionSurvival() {
     }
 };
 
-bool EthernetWUnit::getData(String *data) {
+bool EthernetWUnit::getData(String *data, bool *exec) {
 
     this->webSocketClient.getData(*data);
-    if (data->length() == 0) {
-        return false;
+    if (data->length() != 0) {
+        *exec = true;
     }
 
     return true;

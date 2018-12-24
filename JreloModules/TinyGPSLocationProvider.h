@@ -1,6 +1,6 @@
 /*
  * AUTHOR  : vladyslav.hubin.1989@gmail.com
- * VERSION : 1.0.0
+ * VERSION : 1.0.1
  * */
 
 #pragma once
@@ -16,7 +16,7 @@ class TinyGPSLocationProvider : public LocationProvider {
         HardwareSerial *serial = NULL;
 		float location[2] = {0};
 		
-		void read(unsigned long ms);
+		void read();
 
     public :
 

@@ -1,150 +1,166 @@
-//~ #include <XUnit.h>
+#include <XUnit.h>
 
-//~ void XUnit::executor(const char *json) {
+void XUnit::setValuesInRequest(uint8_t valuesInRequest) {
+    this->valuesInRequest = valuesInRequest;
+}
 
-//~ #ifdef DEBUG
-    //~ Serial.print(F("download. json : "));
-    //~ Serial.println(json);
-//~ #endif
+void XUnit::executor(const char *json) {
 
-    //~ UJsonListener listener;
-    //~ listener.setModules(modules);
+#ifdef DEBUG
+    Serial.print(F("download. json : "));
+    Serial.println(json);
+#endif
 
-    //~ JsonStreamingParser parser;
-    //~ parser.setListener(&listener);
+    UJsonListener listener;
+    listener.setModules(modules, &length);
 
-    //~ for (unsigned int i = 0; i < strlen(json); i++) {
-        //~ parser.parse(json[i]);
-    //~ }
-    //~ parser.reset();
-//~ }
+    JsonStreamingParser parser;
+    parser.setListener(&listener);
 
-//~ void XUnit::updateValuesInModules() {
-    //~ for (int i = 0; i < modules->size(); i++) {
+    for (unsigned int i = 0; i < strlen(json); i++) {
+        parser.parse(json[i]);
+    }
+    parser.reset();
+}
 
-        //~ modules->get(i)->update();
+void XUnit::updateValuesInModules() {
+    for (int i = 0; i < length; i++) {
+        Module *module = modules[i];
+        module->update();
 
-        //~ if (modules->get(i)->needToApply()) {
-            //~ modules->get(i)->applied();
+        if (module->needToApply()) {
+            module->applied();
 
-            //~ if(modules->get(i)->isFeedback())
-                //~ modules->get(i)->inform();
-        //~ }
-    //~ }
-//~ }
+            if(module->isFeedback())
+                module->inform();
+        }
+    }
+}
 
-//~ void XUnit::getRequest() {
-    //~ if(!isReady())
-        //~ return;
+void XUnit::getRequest() {
+    if(!isReady())
+        return;
 
-    //~ StringBuffer sb = StringBuffer(&stringBox);
-    //~ bool result = getData(&sb);
+    bool exec = false;
+    StringBuffer sb = StringBuffer(&stringBox);
+    bool result = getData(&sb, &exec);
 
-    //~ Serial.print(F("GET data - "));
-    //~ if(result) {
-        //~ Serial.println(F("Success"));
-    //~ } else {
-        //~ Serial.println(F("Failure"));
-    //~ }
+#ifdef DEBUG
+    Serial.print(F("GET data - "));
+    if(result) {
+        Serial.println(F("Success"));
+    } else {
+        Serial.println(F("Failure"));
+    }
+#endif
 
-    //~ if (!result) {
-        //~ return;
-    //~ }
+    if (!exec) {
+        return;
+    }
 
-    //~ if(encryption) {
-        //~ char* json = XXTEAHelper::decryptData(sb.toString(), sb.size(), encryptionPassword);
-        //~ executor(json);
-        //~ delete [] json;
+    if(encryption) {
+        char* json = XXTEAHelper::decryptData(sb.toString(), sb.size(), encryptionPassword);
+        executor(json);
+        delete [] json;
 
-    //~ } else {
-        //~ executor(sb.toString());
-    //~ }
+    } else {
+        executor(sb.toString());
+    }
 
-//~ }
+}
 
-//~ void XUnit::prepareOutgoingData() {
-    //~ if(!isReady())
-        //~ return;
+void XUnit::prepareOutgoingData() {
+    if(!isReady())
+        return;
 
-    //~ if (!needToSend())
-        //~ return;
+    if (!needToSend())
+        return;
 
-    //~ bool first = true;
-    //~ StringBuffer sb = StringBuffer(&stringBox);
-    //~ StringBufferPipe pipe = StringBufferPipe(&sb); // adapter
+    bool first = true;
+    StringBuffer sb = StringBuffer(&stringBox);
+    StringBufferPipe pipe = StringBufferPipe(&sb); // adapter
 
-    //~ sb.append('{');
-    //~ for (int i = 0; i < modules->size(); i++) {
-        //~ if (modules->get(i)->needToInform()) {
+    sb.append('{');
+    uint8_t sendTo = 0;
+    for (int i = 0; i < length; i++) {
+        Module *module = modules[i];
+        if (module->needToInform()) {
 
-            //~ Module *module = modules->get(i);
+            if (!first) {
+                sb.append(',');
+            } else {
+                first = false;
+            }
 
-            //~ if (!first) {
-                //~ sb.append(',');
-            //~ } else {
-                //~ first = false;
-            //~ }
+            sb.append('\"');
+            sb.appendString(module->getKey());
+            sb.appendString("\":");
+            module->outputData(&pipe);
+            module->informed();
 
-            //~ sb.append('\"');
-            //~ sb.appendString(module->getKey());
-            //~ sb.appendString("\":");
-            //~ module->outputData(&pipe);
-            //~ module->informed();
-        //~ }
-    //~ }
-    //~ sb.append('}');
-    //~ sb.trim();
+            if(sendTo == valuesInRequest)
+                break;
+        }
+    }
+    sb.append('}');
+    sb.trim();
 
-//~ #ifdef DEBUG
-    //~ Serial.print(F("upload. json : "));
-    //~ Serial.println(sb.toString());
-//~ #endif
+#ifdef DEBUG
+    Serial.print(F("upload. json : "));
+    Serial.println(sb.toString());
+#endif
 
-    //~ if (encryption) {
-        //~ char *json  = XXTEAHelper::encryptData(sb.toString(), sb.size(), encryptionPassword);
-        //~ sb.clear();
-        //~ sb.appendString(json);
-        //~ sb.trim();
-        //~ delete [] json;
-    //~ }
+    if (encryption) {
+        char *json  = XXTEAHelper::encryptData(sb.toString(), sb.size(), encryptionPassword);
+        sb.clear();
+        sb.appendString(json);
+        sb.trim();
+        delete [] json;
+    }
 
-    //~ bool result = postData(&sb);
-    //~ Serial.print(F("POST data - "));
-    //~ if(result) {
-        //~ Serial.println(F("Success"));
-    //~ } else {
-        //~ Serial.println(F("Failure"));
-    //~ }
-//~ }
+    bool result = postData(&sb);
+#ifdef DEBUG
+    Serial.print(F("POST data - "));
+    if(result) {
+        Serial.println(F("Success"));
+    } else {
+        Serial.println(F("Failure"));
+    }
+#endif
+}
 
-//~ bool XUnit::needToSend() {
-    //~ bool result = false;
+bool XUnit::needToSend() {
+    bool result = false;
 
-    //~ for (int i = 0; i < modules->size(); i++) {
-        //~ if (modules->get(i)->needToInform()) {
-            //~ result = true;
-            //~ break;
-        //~ }
-    //~ }
-    //~ return result;
-//~ }
+    for (int i = 0; i < length; i++) {
+        if (modules[i]->needToInform()) {
+            result = true;
+            break;
+        }
+    }
+    return result;
+}
 
-//~ void XUnit::useEncryption(bool encryption) {
-    //~ this->encryption = encryption;
-//~ }
+void XUnit::useEncryption(bool encryption) {
+    this->encryption = encryption;
+}
 
-//~ void XUnit::setEncryptionPassword(const char *encryptionPassword) {
-    //~ this->encryptionPassword = encryptionPassword;
-//~ }
+void XUnit::setEncryptionPassword(const char *encryptionPassword) {
+    this->encryptionPassword = encryptionPassword;
+}
 
-//~ void XUnit::putModule(Module *module) {
-    //~ this->modules->add(module);
-//~ }
+void XUnit::putModule(Module *module) {
+    if(length > MAX_NUMBER_OF_MODULES) {
+        Serial.println(F("Maximum number of modules reached!"));
+        return;
+    }
 
-//~ XUnit::~XUnit() {
-    //~ delete modules;
-//~ }
+    modules[length] = module;
+    length++;
+}
 
-//~ StringBox* XUnit::getStringBox() {
-    //~ return &stringBox;
-//~ }
+XUnit::~XUnit() {}
+
+StringBox* XUnit::getStringBox() {
+    return &stringBox;
+}

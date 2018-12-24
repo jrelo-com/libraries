@@ -1,6 +1,6 @@
 /*
  * AUTHOR  : vladyslav.hubin.1989@gmail.com
- * VERSION : 2.0.0
+ * VERSION : 2.1.0
  * */
 
 #define DEBUG
@@ -26,7 +26,7 @@ class GSMPXUnit : public XUnit {
 
     protected :
     
-        bool getData(StringBuffer *body);
+        bool getData(StringBuffer *body, bool *exec);
         bool postData(StringBuffer *body);
 				
     public :

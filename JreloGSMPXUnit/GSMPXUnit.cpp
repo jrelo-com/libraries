@@ -18,7 +18,7 @@ void GSMPXUnit::prepare() {
     simx->setHeaders(this->headers);
 }
 
-bool GSMPXUnit::getData(StringBuffer *body) {
+bool GSMPXUnit::getData(StringBuffer *body, bool *exec) {
     bool result = false;
 	
 	uint16_t responseCode = 0;
@@ -27,8 +27,9 @@ bool GSMPXUnit::getData(StringBuffer *body) {
 #ifdef DEBUG
             Serial.println(body->toString());
 #endif
-            result = true;
+            *exec = true;
         }
+        result = true;
     } else {
 #ifdef DEBUG
         Serial.println(F("getData - ERROR !"));

@@ -9,23 +9,23 @@
  *
  * PUBLIC
  * */
-float* SIMX::getLocation(){
-	return location;
-} 
- 
- 
+float* SIMX::getLocation() {
+    return location;
+}
+
+
 uint8_t SIMX::getSignalQuality() {
     return this->signalQuality;
 }
-         
-uint16_t SIMX::getVoltage(){
-	return this->voltage;
+
+uint16_t SIMX::getVoltage() {
+    return this->voltage;
 }
 
-uint16_t SIMX::getResetCounter(){
-	return resetCounter;
+uint16_t SIMX::getResetCounter() {
+    return resetCounter;
 }
- 
+
 ATCommandExecutor* SIMX::getAtCmdEx() {
     return atEx;
 }
@@ -77,14 +77,57 @@ bool SIMX::isHTTPSUsed() {
 
 void SIMX::update() {
 
-    if(!SIMAvailableFlag) {
-        bool result = power();
-        if(result) {
-            SIMAvailableFlag = true;
-            successProcessing(POWER_ON);
-        } else {
-            errorProcessing(POWER_ON);
-            return;
+    if(controlTimer0.event()) {
+
+        Serial.print(F("SIMX. Signal quality = "));
+        Serial.println(signalQuality);
+        Serial.print(F("SIMX. Voltage = "));
+        Serial.println(voltage);
+        Serial.print(F("SIMX. Reset counter = "));
+        Serial.println(resetCounter);
+        Serial.print(F("SIMX. Failed action counter = "));
+        Serial.println(failedActionCounter);
+
+        if(!SIMAvailableFlag) {
+            bool result = power();
+            if(result) {
+                SIMAvailableFlag = true;
+                successProcessing(POWER_ON);
+            } else {
+                errorProcessing(POWER_ON);
+                return;
+            }
+        }
+
+        if(SIMAvailableFlag) {
+
+            if(!checkSIMBoard()) {
+                SIMAvailableFlag = false;
+                networkFlag = false;
+                prepareFlag = false;
+                GPRSConnectionFlag = false;
+                Serial.println(F("SIMX. Board unavailable"));
+                return;
+            }
+
+            if(checkSignal()) {
+                successProcessing(CHECK_SIGNAL);
+
+                if(signalQuality > 6) {
+                    if(!networkFlag && isNetworkReady()) {
+                        networkFlag = true;
+                        Serial.println(F("SIMX. Network is ready !"));
+                    }
+                    if(!GPRSConnectionFlag && prepareGPRS()) {
+                        GPRSConnectionFlag = true;
+                        Serial.println(F("SIMX. GPRS connection is ready !"));
+                    }
+                }
+            } else {
+                errorProcessing(CHECK_SIGNAL);
+                networkFlag = false;
+                GPRSConnectionFlag = false;
+            }
         }
     }
 
@@ -101,63 +144,20 @@ void SIMX::update() {
     if(errorCounter)
         checkErrors();
 
-	if(controlTimer0.event()) {
+    if(SIMAvailableFlag && controlTimer1.event() ) {
 
-		Serial.print(F("SIMX. Signal quality = "));
-		Serial.println(signalQuality);
-		Serial.print(F("SIMX. Voltage = "));
-		Serial.println(voltage);
-		Serial.print(F("SIMX. Reset counter = "));
-		Serial.println(resetCounter);
-		Serial.print(F("SIMX. Failed action counter = "));
-		Serial.println(failedActionCounter);
+        if(checkVoltage()) {
+            successProcessing(CHECK_VOLTAGE);
+        } else {
+            errorProcessing(CHECK_VOLTAGE);
+        }
 
-		if(SIMAvailableFlag) {
-			
-			if(!checkSIMBoard()) {
-				SIMAvailableFlag = false;
-				networkFlag = false;
-				prepareFlag = false;
-				GPRSConnectionFlag = false;
-				Serial.println(F("SIMX. Board unavailable"));
-				return;
-			}
-
-			if(checkSignal()) {
-				successProcessing(CHECK_SIGNAL);
-
-				if(signalQuality > 6) {
-					if(!networkFlag && isNetworkReady()) {
-						networkFlag = true;
-						Serial.println(F("SIMX. Network is ready !"));
-					}
-					if(!GPRSConnectionFlag && prepareGPRS()) {
-						GPRSConnectionFlag = true;
-						Serial.println(F("SIMX. GPRS connection is ready !"));
-					}
-				}
-			} else {
-				errorProcessing(CHECK_SIGNAL);
-				networkFlag = false;
-				GPRSConnectionFlag = false;
-			}
-		}
-	}
-	
-	if(SIMAvailableFlag && controlTimer1.event() ){
-		
-		if(checkVoltage()) {
-			successProcessing(CHECK_VOLTAGE);
-		} else {
-			errorProcessing(CHECK_VOLTAGE);
-		}
-		
-		if(signalQuality > 6 && networkFlag && checkLocation()) {
-			successProcessing(GET_LOCATION);
-		} else {
-			errorProcessing(GET_LOCATION);
-		}
-	}
+        if(signalQuality > 6 && networkFlag && checkLocation()) {
+            successProcessing(GET_LOCATION);
+        } else {
+            errorProcessing(GET_LOCATION);
+        }
+    }
 
 }
 
@@ -193,58 +193,58 @@ void SIMX::setHeaders(const char *headers) {
  *
  * PRIVATE
  * */
-bool SIMX::checkLocation(){
-	StringBuffer buffer0 = StringBuffer(stringBox);
-	bool result = atEx->sendAndCheck(AT_COMMAND_26, &buffer0, AT_OK);
-	if(!result)
-		return false;
-		
-	if(!strstr(buffer0.toString(), AT_COMMAND_26_PART_1)) {
-		return false;
-	}
-	
-	StringBuffer buffer1 = StringBuffer(stringBox);
-	StringBufferUtils::substringBetween(&buffer0, &buffer1, AT_COMMAND_26_PART_1, AT_END_LINE);
+bool SIMX::checkLocation() {
+    StringBuffer buffer0 = StringBuffer(stringBox);
+    bool result = atEx->sendAndCheck(AT_COMMAND_26, &buffer0, AT_OK);
+    if(!result)
+        return false;
 
-	char str[buffer1.size()+1] = {0};
-	strcpy(str, buffer1.toString());
-	char *part = strtok(str, COMMA);
-	uint8_t l = 0;	
-	
-	while(part != NULL && l != 2) {
-		float coo = TypeConverter::charArrayToFloat(part);
-		location[l] = coo;
-		l++;
-		part = strtok(NULL, COMMA);	
-	}
-	
-	return true;
+    if(!strstr(buffer0.toString(), AT_COMMAND_26_PART_1)) {
+        return false;
+    }
+
+    StringBuffer buffer1 = StringBuffer(stringBox);
+    StringBufferUtils::substringBetween(&buffer0, &buffer1, AT_COMMAND_26_PART_1, AT_END_LINE);
+
+    char str[buffer1.size()+1] = {0};
+    strcpy(str, buffer1.toString());
+    char *part = strtok(str, COMMA);
+    uint8_t l = 0;
+
+    while(part != NULL && l != 2) {
+        float coo = TypeConverter::charArrayToFloat(part);
+        location[l] = coo;
+        l++;
+        part = strtok(NULL, COMMA);
+    }
+
+    return true;
 }
 
- 
-bool SIMX::checkVoltage(){
-	StringBuffer buffer0 = StringBuffer(stringBox);
-	bool result = atEx->sendAndCheck(AT_COMMAND_25, &buffer0, AT_OK);
-	if(!result)
-		return false;
-		
-	int index = StringBufferUtils::tailSearch(&buffer0, ",");
-	if(index == -1)
-		return false;
-	
-	StringBuffer buffer1 = StringBuffer(stringBox);
-	StringBufferUtils::substring(&buffer0, &buffer1, index+1, buffer0.size()-8);
-	
-	int voltage = TypeConverter::charArrayToInt(buffer1.toString());
-	if(voltage == 0)
-		return false;
-	
-	this->voltage = voltage;
-	
-	return true;
-} 
- 
- 
+
+bool SIMX::checkVoltage() {
+    StringBuffer buffer0 = StringBuffer(stringBox);
+    bool result = atEx->sendAndCheck(AT_COMMAND_25, &buffer0, AT_OK);
+    if(!result)
+        return false;
+
+    int index = StringBufferUtils::tailSearch(&buffer0, ",");
+    if(index == -1)
+        return false;
+
+    StringBuffer buffer1 = StringBuffer(stringBox);
+    StringBufferUtils::substring(&buffer0, &buffer1, index+1, buffer0.size()-8);
+
+    int voltage = TypeConverter::charArrayToInt(buffer1.toString());
+    if(voltage == 0)
+        return false;
+
+    this->voltage = voltage;
+
+    return true;
+}
+
+
 bool SIMX::power() {
     if(checkSIMBoard()) {
         return true;
@@ -298,14 +298,14 @@ void SIMX::successProcessing(Action lastSuccessfulAction) {
 }
 
 void SIMX::powerOff() {
-    //~ atEx->sendAndCheck(AT_COMMAND_16, EMPTY_STRING, 100, 100); 
-    
+    //~ atEx->sendAndCheck(AT_COMMAND_16, EMPTY_STRING, 100, 100);
+
     digitalWrite(powerPin,LOW);
-    delay(10);
+    delay(100);
     digitalWrite(powerPin,HIGH);
     delay(1250);
     digitalWrite(powerPin,LOW);
-    delay(10);
+    delay(100);
 }
 
 void SIMX::restart() {
@@ -328,11 +328,11 @@ void SIMX::restart() {
 
 void SIMX::checkErrors() {
 
-	if(failedActionCounter >= MAX_FAILED_ACTIONS){
-	    Serial.println(F("SIMX. Reset "));
-	    failedActionCounter = 0;
+    if(failedActionCounter >= MAX_FAILED_ACTIONS) {
+        Serial.println(F("SIMX. Reset "));
+        failedActionCounter = 0;
         restart();
-	}
+    }
 
     if(lastFailureAction == RESPONSE_60x) {
         if(errorCounter >= MCE_RESPONSE_60x) {
@@ -499,37 +499,37 @@ bool SIMX::sendRequest(RequestMethod method, StringBuffer *body, uint16_t *httpS
         }
     } else if(method == POST) {
 
-		if(atEx->sendAndCheck(AT_COMMAND_17, AT_OK)) {
-			successProcessing(HTTP_PARA);
-		} else {
-			errorProcessing(HTTP_PARA);
-			return false;
-		}
+        if(atEx->sendAndCheck(AT_COMMAND_17, AT_OK)) {
+            successProcessing(HTTP_PARA);
+        } else {
+            errorProcessing(HTTP_PARA);
+            return false;
+        }
 
-		if(!setHttpData(body)) {
-			return false;
-		}
+        if(!setHttpData(body)) {
+            return false;
+        }
 
-		StringBuffer buffer = StringBuffer(stringBox);
-		if(sendPostRequest(&buffer)) {
-			successProcessing(SEND_REQUEST);
-		} else {
-			errorProcessing(SEND_REQUEST);
-			return false;
-		}
+        StringBuffer buffer = StringBuffer(stringBox);
+        if(sendPostRequest(&buffer)) {
+            successProcessing(SEND_REQUEST);
+        } else {
+            errorProcessing(SEND_REQUEST);
+            return false;
+        }
 
-		uint16_t dataLength = -1;
+        uint16_t dataLength = -1;
 
-		if(getHttpStatusCodeAndDataLength(&buffer, httpStatusCode, &dataLength)) {
-			successProcessing(GET_HTTP_STATUS_CODE);
-		} else {
-			errorProcessing(GET_HTTP_STATUS_CODE);
-			return false;
-		}
+        if(getHttpStatusCodeAndDataLength(&buffer, httpStatusCode, &dataLength)) {
+            successProcessing(GET_HTTP_STATUS_CODE);
+        } else {
+            errorProcessing(GET_HTTP_STATUS_CODE);
+            return false;
+        }
     }
 
-	Serial.print(F("SIMX. HTTP response status code = "));
-	Serial.println(*httpStatusCode);
+    Serial.print(F("SIMX. HTTP response status code = "));
+    Serial.println(*httpStatusCode);
 
     if(httpTerm()) {
         successProcessing(HTTP_TERM);
@@ -538,23 +538,23 @@ bool SIMX::sendRequest(RequestMethod method, StringBuffer *body, uint16_t *httpS
         return false;
     }
 
-	if(*httpStatusCode == 200 || *httpStatusCode == 204){
-		failedActionCounter = 0;
-		return true;
-	}
+    if(*httpStatusCode == 200 || *httpStatusCode == 204) {
+        failedActionCounter = 0;
+        return true;
+    }
 
-	if(*httpStatusCode >= 400 && *httpStatusCode <= 526){	
-		failedActionCounter = 0;
-		return false;
-	}
-	
+    if(*httpStatusCode >= 400 && *httpStatusCode <= 526) {
+        failedActionCounter = 0;
+        return false;
+    }
+
     if(*httpStatusCode >= 600) {
         Serial.print(F("SIMX. Error = "));
         Serial.println(*httpStatusCode);
 
         errorProcessing(RESPONSE_60x);
         return false;
-    } 
+    }
 
     return false;
 }

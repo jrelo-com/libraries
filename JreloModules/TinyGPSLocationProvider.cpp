@@ -7,13 +7,12 @@ TinyGPSLocationProvider::TinyGPSLocationProvider(TinyGPS *gps, HardwareSerial *s
 
 TinyGPSLocationProvider::~TinyGPSLocationProvider() {}
 
-
 float* TinyGPSLocationProvider::getLocation(){
-	read(200);
+	read();
 	return location;
 }
 
-void TinyGPSLocationProvider::read(unsigned long ms) {
+void TinyGPSLocationProvider::read() {
 
     unsigned long start = millis();
     do  {
@@ -21,9 +20,10 @@ void TinyGPSLocationProvider::read(unsigned long ms) {
             char c = serial->read();
             this->gps->encode(c);
         }
-    } while (millis() - start < ms);
+    } while (millis() - start < 1000);
     
-    gps->f_get_position(&location[1], &location[0], &ms);
+    unsigned long age;
+    gps->f_get_position(&location[1], &location[0], &age);
     
 }
 

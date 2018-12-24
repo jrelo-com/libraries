@@ -1,8 +1,8 @@
 #include <UJsonListener.h>
 
-void UJsonListener::setModules(Module **modules, uint8_t *moduleCount) {
+void UJsonListener::setModules(Module **modules, uint8_t *length) {
     this->modules = modules;
-    this->moduleCount = moduleCount;
+    this->length = length;
 }
 
 void UJsonListener::key(String key) {
@@ -14,7 +14,7 @@ void UJsonListener::key(String key) {
     Serial.print(F("RAM : "));
     Serial.println(RAM::free());
 #endif
-    for (int i = 0; i < *moduleCount; i++) {
+    for (int i = 0; i < *length; i++) {
 		Module *module = modules[i];
 		
         if (strcmp(module->getKey(), key.c_str()) == 0) {

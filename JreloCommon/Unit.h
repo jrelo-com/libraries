@@ -1,6 +1,6 @@
 /*
  * AUTHOR  : vladyslav.hubin.1989@gmail.com
- * VERSION : 1.0.1
+ * VERSION : 1.1.0
  * */
 
 #pragma once
@@ -12,14 +12,16 @@
 
 #define DEBUG 
 
+#define MAX_NUMBER_OF_MODULES 12 
+
 class Unit {
 
     protected :
 
-        Module *modules[12];
-        uint8_t moduleCount = 0;
+        Module *modules[MAX_NUMBER_OF_MODULES];
+        uint8_t length = 0;
         
-        virtual bool getData(String *body) = 0;
+        virtual bool getData(String *body, bool *exec) = 0;
         virtual bool postData(String *body) = 0;
         const char *connectionPassword = NULL;
         const char *uuid = NULL;     
@@ -29,8 +31,7 @@ class Unit {
         void prepareOutgoingData();
         bool needToSend();
         
-        uint8_t keysInMessage = 12; //maximum number of keys in the message.
-        uint8_t numberOfUnsentKeys = 0; 
+        uint8_t valuesInRequest = MAX_NUMBER_OF_MODULES; 
 
 	public :
 
@@ -39,7 +40,8 @@ class Unit {
         virtual ~Unit();
 
         void putModule(Module *module);
-        void setKeysInMessage(uint8_t keysInMessage);
+        
+        void setValuesInRequest(uint8_t valuesInRequest);
  
 };
 

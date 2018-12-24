@@ -67,10 +67,10 @@ void EthernetWXUnit::connectionSurvival() {
     }
 }
 
-bool EthernetWXUnit::getData(StringBuffer *buffer) {
+bool EthernetWXUnit::getData(StringBuffer *buffer, bool *exec) {
     this->webSocketClient.getData(buffer);
-    if (buffer->size() == 0) {
-        return false;
+    if (buffer->size() != 0) {
+        *exec = true;
     }
 
     return true;

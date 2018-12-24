@@ -1,6 +1,6 @@
 /*
  * AUTHOR  : vladyslav.hubin.1989@gmail.com
- * VERSION : 1.1.1
+ * VERSION : 1.2.0
  * */
 
 #pragma once
@@ -10,7 +10,7 @@
 #include <SPI.h>
 #include <Ethernet.h>
 
-#define DEBUG
+//~ #define DEBUG
 
 class EthernetPXUnit : public XUnit {
 
@@ -29,7 +29,7 @@ class EthernetPXUnit : public XUnit {
         
     protected :
 	
-        bool getData(StringBuffer *body);
+        bool getData(StringBuffer *body, bool *exec);
         bool postData(StringBuffer *body);
         int statusCode(const char *response) ;
         int findHttpBody(const char *response);

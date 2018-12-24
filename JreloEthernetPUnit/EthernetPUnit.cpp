@@ -1,7 +1,7 @@
 #include <EthernetPUnit.h>
 
 
-bool EthernetPUnit::getData(String *body) {
+bool EthernetPUnit::getData(String *body, bool *exec) {
     if (!ethernetClient.connect("app.jrelo.com", 8183)) {
 #ifdef DEBUG
         Serial.println(F("Connection ERROR"));
@@ -34,12 +34,13 @@ bool EthernetPUnit::getData(String *body) {
     Serial.println(status);
 #endif
     if (status == 204) {
-        return false;
+        return true;
     }
 
     if (status == 200) {
         int start = findHttpBody(body->c_str());
         body->remove(0, start);
+        *exec = true;
 #ifdef DEBUG
         Serial.print(F("HTTP body : "));
         Serial.println(*body);

@@ -1,6 +1,6 @@
 /*
  * AUTHOR  : vladyslav.hubin.1989@gmail.com
- * VERSION : 1.1.1
+ * VERSION : 1.2.0
  * */
 
 #pragma once
@@ -13,7 +13,7 @@
 #include <WebSocketClient.h>
 #include <SimpleTimer.h>
 
-#define DEBUG 
+//~ #define DEBUG 
 
 class EthernetWXUnit : public XUnit {
 
@@ -40,7 +40,7 @@ class EthernetWXUnit : public XUnit {
 
     protected :
 
-        bool getData(StringBuffer *body);
+        bool getData(StringBuffer *body, bool *exec);
         bool postData(StringBuffer *body);
         int statusCode(char *response) ;
         int findHttpBody(char *response);

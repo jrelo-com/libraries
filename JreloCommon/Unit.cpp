@@ -1,18 +1,18 @@
 #include <Unit.h>
 
-void Unit::setKeysInMessage(uint8_t keysInMessage){
-	this->keysInMessage = keysInMessage;
+void Unit::setValuesInRequest(uint8_t valuesInRequest) {
+    this->valuesInRequest = valuesInRequest;
 }
 
 void Unit::executor(String *json) {
-	
+
 #ifdef DEBUG
     Serial.print(F("download. json : "));
     Serial.println(*json);
 #endif
-	
+
     UJsonListener listener;
-    listener.setModules(modules, &moduleCount);
+    listener.setModules(modules, &length);
 
     JsonStreamingParser parser;
     parser.setListener(&listener);
@@ -24,56 +24,57 @@ void Unit::executor(String *json) {
 }
 
 void Unit::updateValuesInModules() {
-    for (int i = 0; i < moduleCount; i++) {
-		Module *module = modules[i];
+    for (int i = 0; i < length; i++) {
+        Module *module = modules[i];
         module->update();
 
         if (module->needToApply()) {
             module->applied();
-            
+
             if(module->isFeedback())
-				module->inform();
+                module->inform();
         }
     }
 }
 
 void Unit::getRequest() {
-	if(!isReady())
-		return;
-	
-	String str = "";
-    bool result = getData(&str);
+    if(!isReady())
+        return;
 
+    String str = "";
+    bool exec = false;
+    bool result = getData(&str, &exec);
+
+#ifdef DEBUG
     Serial.print(F("GET data - "));
     if(result) {
         Serial.println(F("Success"));
     } else {
         Serial.println(F("Failure"));
     }
+#endif
 
-    if (!result) {
-        return;
-    }
-
-    executor(&str);
+    if(exec)
+        executor(&str);
 }
 
 void Unit::prepareOutgoingData() {
-	if(!isReady())
-		return;
-	
+    if(!isReady())
+        return;
+
     if (!needToSend())
         return;
 
     bool first = true;
     String str = "";
-	StringPipe pipe(&str); // adapter
-	
+    StringPipe pipe(&str); // adapter
+
     str += '{';
-    for (int i = 0; i < moduleCount; i++) {
+    uint8_t sendTo = 0;
+    for (int i = 0; i < length; i++) {
         if (modules[i]->needToInform()) {
 
-			Module *module = modules[i];
+            Module *module = modules[i];
 
             if (!first) {
                 str += ',';
@@ -84,8 +85,13 @@ void Unit::prepareOutgoingData() {
             str += '\"';
             str += module->getKey();
             str += "\":";
-			module->outputData(&pipe);
+            module->outputData(&pipe);
             module->informed();
+
+            sendTo++;
+
+            if(sendTo == valuesInRequest)
+                break;
         }
     }
     str += '}';
@@ -96,18 +102,20 @@ void Unit::prepareOutgoingData() {
 #endif
 
     bool result = postData(&str);
-	Serial.print(F("POST data - "));
-	if(result) {
-		Serial.println(F("Success"));
-	} else {
-		Serial.println(F("Failure"));
-	}
+#ifdef DEBUG
+    Serial.print(F("POST data - "));
+    if(result) {
+        Serial.println(F("Success"));
+    } else {
+        Serial.println(F("Failure"));
+    }
+#endif
 }
 
 bool Unit::needToSend() {
     bool result = false;
 
-    for (int i = 0; i < moduleCount; i++) {
+    for (int i = 0; i < length; i++) {
         if (modules[i]->needToInform()) {
             result = true;
             break;
@@ -117,9 +125,14 @@ bool Unit::needToSend() {
 }
 
 void Unit::putModule(Module *module) {
-    modules[moduleCount] = module;
-    moduleCount++;
+    if(length > MAX_NUMBER_OF_MODULES) {
+        Serial.println(F("Maximum number of modules reached!"));
+        return;
+    }
+
+    modules[length] = module;
+    length++;
 }
 
-Unit::~Unit(){
+Unit::~Unit() {
 }

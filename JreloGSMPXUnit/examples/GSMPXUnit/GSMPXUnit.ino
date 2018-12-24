@@ -14,10 +14,13 @@
 SimpleTimer memoryTimer(10000);
 #endif
 
+const char *APN = "INTERNET";
+const char *PIN = "0000";
 SIMX simx(&Serial3, POWER_PIN);
-GSMPXUnit unit(1024, "92969ef4-0000-0000-0000-4de2ad1118db", "6809bed7d27440c89216bf540c000000");
-char *APN = "INTERNET";
-char *PIN = "0000";
+
+const char *uuid = "00000000-0000-0000-0000-0000000";
+const char *connectionPassword = "00000000000000000000000000000";
+GSMPXUnit unit(1024, uuid, connectionPassword);
 
 LifetimeModule ltm("ltm");
 ATCommandExecutorModule atcmdexm("atm", simx.getAtCmdEx(), unit.getStringBox());

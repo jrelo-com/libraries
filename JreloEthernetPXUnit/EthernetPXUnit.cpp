@@ -1,7 +1,7 @@
 #include <EthernetPXUnit.h>
 
 
-bool EthernetPXUnit::getData(StringBuffer *body) {
+bool EthernetPXUnit::getData(StringBuffer *body, bool *exec) {
     if (!ethernetClient.connect("app.jrelo.com", 8183)) {
         Serial.println(F("Connection ERROR"));
         ethernetInitFlag = false;
@@ -29,16 +29,23 @@ bool EthernetPXUnit::getData(StringBuffer *body) {
 
     int status = statusCode(body->toString());
 
+#ifdef DEBUG
     Serial.print(F("HTTP status : "));
     Serial.println(status);
+#endif
 
     if (status == 204) {
-        return false;
+        return true;
     }
 
     if (status == 200) {
         int start = findHttpBody(body->toString());
         body->trim(start, body->size());
+        *exec = true;        
+#ifdef DEBUG
+        Serial.print(F("HTTP body : "));
+        Serial.println(body->toString());
+#endif        
         return true;
     }
 

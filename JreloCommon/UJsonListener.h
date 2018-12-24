@@ -1,6 +1,6 @@
 /*
  * AUTHOR  : vladyslav.hubin.1989@gmail.com
- * VERSION : 1.0.0
+ * VERSION : 1.1.0
  * */
 
 #pragma once
@@ -20,12 +20,12 @@ class UJsonListener : public JsonListener {
   private :
   
     Module **modules = NULL;
-    uint8_t *moduleCount = NULL;
+    uint8_t *length = NULL;
     int index = 0;
 
   public :
 
-    void setModules(Module **modules, uint8_t *moduleCount);
+    void setModules(Module **modules, uint8_t *length);
 
     void key(String key);
 

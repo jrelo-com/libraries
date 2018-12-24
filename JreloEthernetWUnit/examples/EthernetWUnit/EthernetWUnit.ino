@@ -9,8 +9,10 @@
 SimpleTimer timer(10000);
 #endif
 
+const char *uuid = "00000000-0000-0000-0000-0000000";
+const char *connectionPassword = "00000000000000000000000000000";
 byte mac[] = { 0xDE, 0xAB, 0xBE, 0xEF, 0xFE, 0xEF };
-EthernetWUnit unit("00000000-0000-0000-0000-0000000", "00000000000000000000000000000", mac);
+EthernetWUnit unit(uuid, connectionPassword, mac);
 
 LifetimeModule ltm("lt");
 

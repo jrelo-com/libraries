@@ -1,6 +1,6 @@
 /*
  * AUTHOR  : vladyslav.hubin.1989@gmail.com
- * VERSION : 2.2.1
+ * VERSION : 2.3.0
  * */
  
 #pragma once
@@ -14,7 +14,7 @@
 #include <StringBufferUtils.h>
 #include <LocationProvider.h>
 
-#define DEBUG
+//~ #define DEBUG
 #define SELF_CONTROL_DELAY 10000
 #define GET_LOCATION_DELAY 30000
 #define MCE_CHECK_NETWORK 10
@@ -78,7 +78,7 @@ class SIMX : public LocationProvider {
         bool prepareFlag = false;			// check PIN and set APN
         bool networkFlag = false; 			// network redy to use
         bool SIMAvailableFlag = false;  	// SIM awailable (responds to requests)
-        bool GPRSConnectionFlag = false;    // Internet ready
+        bool GPRSConnectionFlag = false;    // Internet is ready
         bool useHTTPSFlag = false;
         Action lastFailureAction = EMPTY;
         Action lastSuccessfulAction  = EMPTY;
