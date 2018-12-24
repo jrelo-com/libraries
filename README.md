@@ -47,8 +47,8 @@
 #include &lt;RelayModule.h&gt;
 
 byte mac[] = { 0xDE, 0xAB, 0xDE, 0xEF, 0xFF, 0xEF };
-char uuid[] = "00000000-0000-0000-0000-0000000";
-char connectionPassword[] = "00000000000000000000000000000";
+const char *uuid = "00000000-0000-0000-0000-0000000";
+const char *connectionPassword = "00000000000000000000000000000";
 
 EthernetPUnit unit(uuid, connectionPassword, mac);
 LifetimeModule ltm(&quot;lt&quot;); // "lt" - module key
