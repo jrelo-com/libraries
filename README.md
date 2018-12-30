@@ -66,8 +66,8 @@ void loop() {
 </pre>
 <br>
 <a href="http://www.youtube.com/watch?feature=player_embedded&v=cMK5AElEt_4
-" target="_blank"><img src="http://img.youtube.com/vi/cMK5AElEt_4/0.jpg" 
-alt="IMAGE ALT TEXT HERE" width="480" height="360" border="10" /></a>
+" target="_blank"><img src="https://img.youtube.com/vi/cMK5AElEt_4/0.jpg" 
+alt="Arduino. Remote control via the Internet" width="480" height="360" border="10" /></a>
 <br>
 
 <h2>
