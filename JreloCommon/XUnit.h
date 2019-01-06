@@ -1,6 +1,6 @@
 /*
  * AUTHOR  : vladyslav.hubin.1989@gmail.com
- * VERSION : 1.3.0
+ * VERSION : 1.3.1
  * */
 
 #pragma once
@@ -24,7 +24,7 @@ class XUnit {
 
         Module *modules[MAX_NUMBER_OF_MODULES];
         uint8_t length = 0;
-        uint8_t valuesInRequest = MAX_NUMBER_OF_MODULES; 
+        uint8_t numberOfValuesInRequest = MAX_NUMBER_OF_MODULES; 
         bool encryption = false;
                
         StringBox stringBox = StringBox(); 
@@ -51,7 +51,7 @@ class XUnit {
         void putModule(Module *module);
         StringBox* getStringBox();
         
-        void setValuesInRequest(uint8_t valuesInRequest);
-               
+        void setNumberOfValuesInRequest(uint8_t numberOfValuesInRequest);
+        uint8_t getNumberOfValuesInRequest();      
 };
 

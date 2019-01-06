@@ -1,7 +1,11 @@
 #include <XUnit.h>
 
-void XUnit::setValuesInRequest(uint8_t valuesInRequest) {
-    this->valuesInRequest = valuesInRequest;
+uint8_t XUnit::getNumberOfValuesInRequest(){
+	return numberOfValuesInRequest;
+}
+
+void XUnit::setNumberOfValuesInRequest(uint8_t numberOfValuesInRequest) {
+    this->numberOfValuesInRequest = numberOfValuesInRequest;
 }
 
 void XUnit::executor(const char *json) {
@@ -100,7 +104,7 @@ void XUnit::prepareOutgoingData() {
             module->outputData(&pipe);
             module->informed();
 
-            if(sendTo == valuesInRequest)
+            if(sendTo == numberOfValuesInRequest)
                 break;
         }
     }

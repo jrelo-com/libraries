@@ -1,7 +1,11 @@
 #include <Unit.h>
 
-void Unit::setValuesInRequest(uint8_t valuesInRequest) {
-    this->valuesInRequest = valuesInRequest;
+uint8_t Unit::getNumberOfValuesInRequest(){
+	return numberOfValuesInRequest;
+}
+
+void Unit::setNumberOfValuesInRequest(uint8_t numberOfValuesInRequest) {
+    this->numberOfValuesInRequest = numberOfValuesInRequest;
 }
 
 void Unit::executor(String *json) {
@@ -92,7 +96,7 @@ void Unit::prepareOutgoingData() {
 
             sendTo++;
 
-            if(sendTo == valuesInRequest)
+            if(sendTo == numberOfValuesInRequest)
                 break;
         }
     }
