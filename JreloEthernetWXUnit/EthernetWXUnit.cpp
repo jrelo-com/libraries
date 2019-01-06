@@ -10,7 +10,10 @@ bool EthernetWXUnit::ethernetInit() {
         return true;
     } else {
         Serial.println(F("DHCP"));
-        return Ethernet.begin(this->mac, 10000);
+        WDT::stop();
+        bool result =  Ethernet.begin(this->mac, 10000);
+        WDT::start();
+        return result;
     }
 }
 
@@ -36,16 +39,16 @@ bool EthernetWXUnit::connection() {
         ethernetReadyFlag = false;
         return false;
     }
-
+	WDT::reset();
     if (webSocketClient.handshake(ethernetClient)) {
         Serial.println(F("Handshake successful"));
     } else {
         Serial.println(F("Handshake failed."));
         return false;
     }
-
+	WDT::reset();
     return true;
-};
+}
 
 void EthernetWXUnit::connectionSurvival() {
     if(!ethernetReadyFlag) 
@@ -54,10 +57,11 @@ void EthernetWXUnit::connectionSurvival() {
     if (ethernetClient.connected()) {
         return;
     }
-
+	WDT::reset();
     ethernetClient.stop();
     delay(1000);
-
+	WDT::reset();
+	
     Serial.println(F("Try reconnect ..."));
 
     if (connection()) {
@@ -68,16 +72,19 @@ void EthernetWXUnit::connectionSurvival() {
 }
 
 bool EthernetWXUnit::getData(StringBuffer *buffer, bool *exec) {
+	WDT::reset();
     this->webSocketClient.getData(buffer);
     if (buffer->size() != 0) {
         *exec = true;
     }
-
+	WDT::reset();
     return true;
 }
 
 bool EthernetWXUnit::postData(StringBuffer *data) {
+	WDT::reset();
     this->webSocketClient.sendData(data->toString());
+    WDT::reset();
 	return true;
 }
 
@@ -111,24 +118,27 @@ EthernetWXUnit::EthernetWXUnit(int stringBoxSize, const char *uuid, const char *
 EthernetWXUnit::~EthernetWXUnit() {}
 
 void EthernetWXUnit::update() {
-
+	WDT::reset();
     if (!ethernetReadyFlag && connectionTimer.event()) {
         ethernetReadyFlag = ethernetInit();
+        WDT::stop();
+        WDT::start();
         Serial.print(F("Ethernet status = "));
         Serial.println(ethernetReadyFlag);
 
         connectionTimer.reset();
     }
-
+	WDT::reset();
     connectionSurvival();
+    WDT::reset();
     getRequest();
+    WDT::reset();
     updateValuesInModules();
+    WDT::reset();
     prepareOutgoingData();
+    WDT::reset();
 }
 
 bool EthernetWXUnit::isReady() {
     return this->ethernetReadyFlag;
 }
-
-
-

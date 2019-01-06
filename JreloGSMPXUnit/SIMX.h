@@ -1,6 +1,6 @@
 /*
  * AUTHOR  : vladyslav.hubin.1989@gmail.com
- * VERSION : 2.3.0
+ * VERSION : 2.4.0
  * */
  
 #pragma once
@@ -14,7 +14,7 @@
 #include <StringBufferUtils.h>
 #include <LocationProvider.h>
 
-//~ #define DEBUG
+#define DEBUG
 #define SELF_CONTROL_DELAY 10000
 #define GET_LOCATION_DELAY 30000
 #define MCE_CHECK_NETWORK 10
@@ -30,6 +30,15 @@ const char COMMA		[] = ",";
 enum RequestMethod {
     GET,
     POST
+};
+
+enum NetworkStatus {
+	NOT_SEARCHING,  
+	HOME,	
+	SEARCHING,	
+	UNKNOWN,
+	DENIED,
+	ROAMING
 };
 
 enum Action {
@@ -80,6 +89,7 @@ class SIMX : public LocationProvider {
         bool SIMAvailableFlag = false;  	// SIM awailable (responds to requests)
         bool GPRSConnectionFlag = false;    // Internet is ready
         bool useHTTPSFlag = false;
+        NetworkStatus networkStatus = NOT_SEARCHING;
         Action lastFailureAction = EMPTY;
         Action lastSuccessfulAction  = EMPTY;
         SimpleTimer controlTimer0 = SimpleTimer(SELF_CONTROL_DELAY);

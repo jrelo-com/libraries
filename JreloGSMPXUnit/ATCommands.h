@@ -1,6 +1,6 @@
 /*
  * AUTHOR  : vladyslav.hubin.1989@gmail.com
- * VERSION : 2.2.0
+ * VERSION : 2.3.0
  * */
  
 #pragma once
@@ -42,9 +42,15 @@ const char AT_COMMAND_14_PART_2	[] = "+CPIN: READY";
 const char AT_COMMAND_14_PART_3	[] = "+CPIN: SIM PIN";
 const char AT_COMMAND_14_PART_4	[] = "+CME ERROR: incorrect password";
 const char AT_COMMAND_14_PART_5	[] = "+CPIN: SIM PUK";
-const char AT_COMMAND_15_PART_1	[] = "+CREG:";
-const char AT_COMMAND_15_PART_2	[] = "+CREG: 0,1";
-const char AT_COMMAND_15_PART_3	[] = "+CREG: 0,5";
+
+const char AT_COMMAND_15_PART	[] = "+CREG:";
+const char AT_COMMAND_15_PART_0	[] = ",0\r\n";
+const char AT_COMMAND_15_PART_1	[] = ",1\r\n";
+const char AT_COMMAND_15_PART_2	[] = ",2\r\n";
+const char AT_COMMAND_15_PART_3	[] = ",3\r\n";
+const char AT_COMMAND_15_PART_4	[] = ",4\r\n";
+const char AT_COMMAND_15_PART_5	[] = ",5\r\n";
+
 const char AT_COMMAND_9_PART_1	[] = "+SAPBR: 1,1";
 const char AT_COMMAND_9_PART_2	[] = "+SAPBR: 1,1";
 const char AT_COMMAND_5_PART_1	[] = "ERROR";

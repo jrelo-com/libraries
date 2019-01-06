@@ -19,6 +19,7 @@ void XUnit::executor(const char *json) {
 
     for (unsigned int i = 0; i < strlen(json); i++) {
         parser.parse(json[i]);
+        WDT::reset();
     }
     parser.reset();
 }
@@ -34,6 +35,7 @@ void XUnit::updateValuesInModules() {
             if(module->isFeedback())
                 module->inform();
         }
+        WDT::reset();
     }
 }
 

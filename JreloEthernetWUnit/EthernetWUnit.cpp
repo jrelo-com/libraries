@@ -1,9 +1,7 @@
 #include <EthernetWUnit.h>
 
 bool EthernetWUnit::ethernetInit() {
-#ifdef DEBUG
     Serial.println(F("Ethernet init"));
-#endif
     if(ip != NULL && dns == NULL) {
         Ethernet.begin(this->mac, IPAddress(ip[0], ip[1], ip[2], ip[3]));
         return true;
@@ -11,10 +9,11 @@ bool EthernetWUnit::ethernetInit() {
         Ethernet.begin(this->mac, IPAddress(ip[0], ip[1], ip[2], ip[3]), IPAddress(dns[0], dns[1], dns[2], dns[3]));
         return true;
     } else {
-#ifdef DEBUG
         Serial.println(F("DHCP"));
-#endif
-        return Ethernet.begin(this->mac, 10000);
+        WDT::stop();
+        bool result =  Ethernet.begin(this->mac, 10000);
+        WDT::start();
+        return result;
     }
 }
 
@@ -34,28 +33,20 @@ bool EthernetWUnit::connection() {
         return false;
 
     if (ethernetClient.connect(host, 8181)) {
-#ifdef DEBUG
         Serial.println(F("Conected"));
-#endif
     } else {
-#ifdef DEBUG
         Serial.println(F("Fail"));
-#endif
         ethernetReadyFlag = false;
         return false;
     }
-
+	WDT::reset();
     if (webSocketClient.handshake(ethernetClient)) {
-#ifdef DEBUG
         Serial.println(F("Handshake successful"));
-#endif
     } else {
-#ifdef DEBUG
         Serial.println(F("Handshake failed."));
-#endif
         return false;
     }
-
+	WDT::reset();
     return true;
 };
 
@@ -66,35 +57,32 @@ void EthernetWUnit::connectionSurvival() {
     if (ethernetClient.connected()) {
         return;
     }
-
+	WDT::reset();
     ethernetClient.stop();
     delay(1000);
-#ifdef DEBUG
+    WDT::reset();
     Serial.println(F("Try reconnect ..."));
-#endif
     if (connection()) {
-#ifdef DEBUG
         Serial.println(F("Connection established !"));
-#endif
     } else {
-#ifdef DEBUG
         Serial.println(F("Connection failed !"));
-#endif
     }
 };
 
 bool EthernetWUnit::getData(String *data, bool *exec) {
-
+	WDT::reset();
     this->webSocketClient.getData(*data);
     if (data->length() != 0) {
         *exec = true;
     }
-
+WDT::reset();
     return true;
 }
 
 bool EthernetWUnit::postData(String *data) {
+	WDT::reset();
     this->webSocketClient.sendData(*data);
+	WDT::reset();
 	return true;
 }
 
@@ -125,25 +113,27 @@ EthernetWUnit::EthernetWUnit(const char *uuid, const char *connectionPassword, b
 EthernetWUnit::~EthernetWUnit() {}
 
 void EthernetWUnit::update() {
-
+	WDT::reset();
     if (!ethernetReadyFlag && connectionTimer.event()) {
         ethernetReadyFlag = ethernetInit();
-#ifdef DEBUG
+        WDT::stop();
+        WDT::start();
         Serial.print(F("Ethernet status = "));
         Serial.println(ethernetReadyFlag);
-#endif
+        
         connectionTimer.reset();
     }
-
+	WDT::reset();
     connectionSurvival();
+    WDT::reset();
     getRequest();
+    WDT::reset();
     updateValuesInModules();
+    WDT::reset();
     prepareOutgoingData();
+    WDT::reset();
 }
 
 bool EthernetWUnit::isReady() {
     return this->ethernetReadyFlag;
 }
-
-
-

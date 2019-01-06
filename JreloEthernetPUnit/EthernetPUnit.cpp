@@ -2,6 +2,7 @@
 
 
 bool EthernetPUnit::getData(String *body, bool *exec) {
+	WDT::reset();
     if (!ethernetClient.connect("app.jrelo.com", 8183)) {
 #ifdef DEBUG
         Serial.println(F("Connection ERROR"));
@@ -23,6 +24,7 @@ bool EthernetPUnit::getData(String *body, bool *exec) {
     while ( ethernetClient.connected() ) {
         if (ethernetClient.available()) {
             (*body) += (char)ethernetClient.read();
+            WDT::reset();
         }
     }
 
@@ -113,9 +115,7 @@ EthernetPUnit::EthernetPUnit(const char *uuid, const char *connectionPassword, b
 }
 
 bool EthernetPUnit::ethernetInit() {
-#ifdef DEBUG
     Serial.println(F("Ethernet init"));
-#endif
     if(ip != NULL && dns == NULL) {
         Ethernet.begin(this->mac, IPAddress(ip[0], ip[1], ip[2], ip[3]));
         return true;
@@ -123,10 +123,11 @@ bool EthernetPUnit::ethernetInit() {
         Ethernet.begin(this->mac, IPAddress(ip[0], ip[1], ip[2], ip[3]), IPAddress(dns[0], dns[1], dns[2], dns[3]));
         return true;
     } else {
-#ifdef DEBUG
         Serial.println(F("DHCP"));
-#endif
-        return Ethernet.begin(this->mac, 10000);
+        WDT::stop();
+        bool result = Ethernet.begin(this->mac, 10000);
+        WDT::start();
+        return result;
     }
 }
 
@@ -137,19 +138,22 @@ bool EthernetPUnit::isReady() {
 }
 
 void EthernetPUnit::update() {
-
+	WDT::reset();
     if (!ethernetInitFlag && connectionTimer.event()) {
         ethernetInitFlag = ethernetInit();
-#ifdef DEBUG
+		WDT::stop();
+        WDT::start();
         Serial.print(F("Ethernet status = "));
         Serial.println(ethernetInitFlag);
-#endif
         connectionTimer.reset();
     }
-
+	WDT::reset();
     if (requestTimer.event())
         getRequest();
 
+	WDT::reset();
     updateValuesInModules();
+    WDT::reset();
     prepareOutgoingData();
+    WDT::reset();
 }

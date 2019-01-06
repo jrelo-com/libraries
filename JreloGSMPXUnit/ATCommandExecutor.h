@@ -1,12 +1,13 @@
 /*
  * AUTHOR  : vladyslav.hubin.1989@gmail.com
- * VERSION : 2.1.1
+ * VERSION : 2.2.0
  * */
 
 //#define DEBUG
 
 #pragma once
 #include <Arduino.h>
+#include <WDT.h>
 #include <avr/pgmspace.h>
 #include <StringBuffer.h>
 
@@ -27,9 +28,9 @@ class ATCommandExecutor {
         ATCommandExecutor(HardwareSerial *hs);
         ~ATCommandExecutor();
         
-        bool sendAndCheck(StringBuffer  *cmd,  								const char *firstPattern, const char *secondPattern = NULL, uint32_t fullTimeout = 10000, uint32_t charTimeout = 10000);        
-		bool sendAndCheck(const char 	*cmd,  								const char *firstPattern, const char *secondPattern = NULL, uint32_t fullTimeout = 10000, uint32_t charTimeout = 10000);        
-		bool sendAndCheck(StringBuffer  *cmd, StringBuffer *responseBuffer, const char *firstPattern, const char *secondPattern = NULL, uint32_t fullTimeout = 10000, uint32_t charTimeout = 10000);
-		bool sendAndCheck(const char 	*cmd, StringBuffer *responseBuffer, const char *firstPattern, const char *secondPattern = NULL, uint32_t fullTimeout = 10000, uint32_t charTimeout = 10000);        
+        bool sendAndCheck(StringBuffer  *cmd,  									const char *firstPattern, const char *secondPattern = NULL, uint32_t fullTimeout = 10000, uint32_t charTimeout = 10000);        
+		bool sendAndCheck(const char 	*cmd,  									const char *firstPattern, const char *secondPattern = NULL, uint32_t fullTimeout = 10000, uint32_t charTimeout = 10000);        
+		bool sendAndCheck(StringBuffer  *cmd, 	StringBuffer *responseBuffer,	const char *firstPattern, const char *secondPattern = NULL, uint32_t fullTimeout = 10000, uint32_t charTimeout = 10000);
+		bool sendAndCheck(const char 	*cmd, 	StringBuffer *responseBuffer, 	const char *firstPattern, const char *secondPattern = NULL, uint32_t fullTimeout = 10000, uint32_t charTimeout = 10000);        
 
 };

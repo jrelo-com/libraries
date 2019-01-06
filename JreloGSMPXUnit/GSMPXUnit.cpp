@@ -1,5 +1,6 @@
 #include <GSMPXUnit.h>
 
+
 void GSMPXUnit::prepare() {
 	
     strcpy(this->url, "app.jrelo.com:818");
@@ -16,6 +17,7 @@ void GSMPXUnit::prepare() {
     
     simx->setUrl(this->url);
     simx->setHeaders(this->headers);
+    
 }
 
 bool GSMPXUnit::getData(StringBuffer *body, bool *exec) {
@@ -57,22 +59,27 @@ GSMPXUnit::GSMPXUnit(uint16_t stringBoxSize, const char *uuid, const char *conne
 
 GSMPXUnit::~GSMPXUnit() {}
 
-void GSMPXUnit::update() {
-
+void GSMPXUnit::update(){
+	WDT::reset();
 	stringBox.update();
-
+	WDT::reset();
     if(!prepareUnitFlag) {
         prepare();
+        WDT::stop();
+        WDT::start();
         prepareUnitFlag = true;
     }
-
+	WDT::reset();
     simx->update();
-
+	WDT::reset();
     if (requestTimer.event())
         getRequest();
 
+	WDT::reset();
     updateValuesInModules();
+    WDT::reset();
     prepareOutgoingData();
+	WDT::reset();
 }
 
 bool GSMPXUnit::isReady() {

@@ -1,6 +1,6 @@
 /*
  * AUTHOR  : vladyslav.hubin.1989@gmail.com
- * VERSION : 2.1.0
+ * VERSION : 2.2.0
  * */
 
 #define DEBUG
@@ -17,7 +17,7 @@ class GSMPXUnit : public XUnit {
 	private :
 	
         SIMX *simx = NULL;
-        SimpleTimer requestTimer = SimpleTimer(7000);
+        SimpleTimer requestTimer = SimpleTimer(5000);
         char url[70] = {0};
         char headers[40] = {0};
         bool prepareUnitFlag = false;
@@ -36,4 +36,5 @@ class GSMPXUnit : public XUnit {
         void update();
         bool isReady();
 		void setSIMX(SIMX *simx);
+
 };

@@ -19,6 +19,7 @@ void Unit::executor(String *json) {
 
     for (unsigned int i = 0; i < json->length(); i++) {
         parser.parse((*json)[i]);
+        WDT::reset();
     }
     parser.reset();
 }
@@ -34,6 +35,7 @@ void Unit::updateValuesInModules() {
             if(module->isFeedback())
                 module->inform();
         }
+        WDT::reset();
     }
 }
 

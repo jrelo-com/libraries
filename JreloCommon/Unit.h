@@ -1,10 +1,11 @@
 /*
  * AUTHOR  : vladyslav.hubin.1989@gmail.com
- * VERSION : 1.1.0
+ * VERSION : 1.2.0
  * */
 
 #pragma once
 #include <Arduino.h>
+#include <WDT.h>
 #include <Module.h>
 #include <StringPipe.h>
 #include <UJsonListener.h>
