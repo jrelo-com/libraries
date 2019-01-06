@@ -47,8 +47,8 @@
 #include &lt;RelayModule.h&gt;
 
 byte mac[] = { 0xDE, 0xAB, 0xDE, 0xEF, 0xFF, 0xEF };
-char uuid[] = "00000000-0000-0000-0000-0000000";
-char connectionPassword[] = "00000000000000000000000000000";
+const char *uuid = "00000000-0000-0000-0000-0000000";
+const char *connectionPassword = "00000000000000000000000000000";
 
 EthernetPUnit unit(uuid, connectionPassword, mac);
 LifetimeModule ltm(&quot;lt&quot;); // "lt" - module key
@@ -66,8 +66,8 @@ void loop() {
 </pre>
 <br>
 <a href="http://www.youtube.com/watch?feature=player_embedded&v=cMK5AElEt_4
-" target="_blank"><img src="http://img.youtube.com/vi/cMK5AElEt_4/0.jpg" 
-alt="IMAGE ALT TEXT HERE" width="480" height="360" border="10" /></a>
+" target="_blank"><img src="https://img.youtube.com/vi/cMK5AElEt_4/0.jpg" 
+alt="Arduino. Remote control via the Internet" width="480" height="360" border="10" /></a>
 <br>
 
 <h2>
