@@ -1,29 +1,27 @@
 /*
  * AUTHOR  : vladyslav.hubin.1989@gmail.com
- * VERSION : 1.1.1
+ * VERSION : 1.0.0
  * */
 
 #pragma once
 #include <Arduino.h>
 #include <Module.h>
-#include <SIMX.h>
-#include <SimpleTimer.h>
+#include <SIMZ.h>
 #include <TypeConverter.h>
 
-
-class GSMUnitInfoModule : public Module {
+class SendSMSModule : public Module {
 
     private :
-        SIMX *simx	= NULL;
-        SimpleTimer timer = SimpleTimer(60000);
+
+        SIMZ *simz = NULL;
+        uint8_t counter = 0;
 
     public :
 
-        GSMUnitInfoModule(const char *key, SIMX *simx);
-        ~GSMUnitInfoModule();
+        SendSMSModule(const char *key, SIMZ *simz);
+        ~SendSMSModule();
         void update();
         void inputData(const char *data);
         void outputData(Pipe *pipe);
 
 };
-

@@ -26,7 +26,11 @@ uint16_t SIMX::getResetCounter() {
     return resetCounter;
 }
 
-ATCommandExecutor* SIMX::getAtCmdEx() {
+void SIMX::setATCommandExecutor(ATCommandExecutor *atEx) {
+    this->atEx = atEx;
+}
+
+ATCommandExecutor* SIMX::getATCommandExecutor() {
     return atEx;
 }
 
@@ -34,11 +38,9 @@ void SIMX::setStringBox(StringBox *stringBox) {
     this->stringBox = stringBox;
 }
 
-SIMX::SIMX( HardwareSerial *hs, uint8_t powerPin) {
-
+SIMX::SIMX(uint8_t powerPin) {
     this->powerPin = powerPin;
     pinMode(powerPin, OUTPUT);
-    this->atEx = new ATCommandExecutor(hs);
 }
 
 SIMX::~SIMX() {}
@@ -75,7 +77,15 @@ bool SIMX::isHTTPSUsed() {
     return useHTTPSFlag;
 }
 
+void SIMX::init() {
+}
+
 void SIMX::update() {
+
+    if(!initFlag) {
+        init();
+        initFlag = true;
+    }
 
     if(errorCounter)
         checkErrors();
@@ -111,10 +121,9 @@ void SIMX::update() {
                 prepareFlag = false;
                 GPRSConnectionFlag = false;
                 Serial.println(F("SIMX. Board unavailable"));
-                return;
             }
 
-            if(checkSignal()) {
+            if(SIMAvailableFlag && checkSignal()) {
                 successProcessing(CHECK_SIGNAL);
 
                 if(signalQuality > 6) {
@@ -133,6 +142,7 @@ void SIMX::update() {
                 GPRSConnectionFlag = false;
             }
         }
+
     }
 
     if(SIMAvailableFlag && !prepareFlag) {
@@ -146,7 +156,6 @@ void SIMX::update() {
     }
 
     if(SIMAvailableFlag && controlTimer1.event() ) {
-
         if(checkVoltage()) {
             successProcessing(CHECK_VOLTAGE);
         } else {
@@ -160,6 +169,7 @@ void SIMX::update() {
                 errorProcessing(GET_LOCATION);
             }
         }
+
     }
 
 }
@@ -199,14 +209,14 @@ void SIMX::setHeaders(const char *headers) {
 bool SIMX::checkLocation() {
     StringBuffer buffer0 = StringBuffer(stringBox);
     bool result = atEx->sendAndCheck(AT_COMMAND_26, &buffer0, AT_OK);
-    if(!result){
+    if(!result) {
         location[0] = 1000;
         location[1] = 1000;
         return false;
-	}
+    }
 
     if(!strstr(buffer0.toString(), AT_COMMAND_26_PART_1)) {
-		location[0] = 1000;
+        location[0] = 1000;
         location[1] = 1000;
         return false;
     }
@@ -287,12 +297,14 @@ void SIMX::successProcessing(Action lastSuccessfulAction) {
 }
 
 bool SIMX::power() {
+    bool result = false;
     if(checkSIMBoard()) {
-        return true;
+        result = true;
     } else {
         powerOn();
-        return checkSIMBoard();
+        result = checkSIMBoard();
     }
+    return result;
 }
 
 void SIMX::powerOn() {
