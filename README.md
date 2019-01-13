@@ -1,8 +1,20 @@
 <a target="_blank" href="https://jrelo.com"><img src="img/logo-lg.png" title="jrelo"></a> 
-<h1 align="center">Get control of Arduino over the Internet.</h1>
-<h2 align="center">For more information, see the <a href="https://github.com/jrelo-com/libraries/wiki">Wiki</a></h2>
+<h3>Jrelo - Hybrid Message Broker (Hybrid Message Queue)</h3>
+<br>
+<h1 align="center">Get control of the Arduino over the Internet with Jrelo.</h1>
+<h3 align="center">
+    Use ready-made implementations of Units and various Modules for the Arduino platform.<br>
+    For more information, see the <a href="https://github.com/jrelo-com/libraries/wiki">WIKI</a>.
+</h3>
 
-<h3>Example of a unit with two modules</h3>
+<br>
+
+<h2>Usage</h2>
+<p>
+    Select the appropriate implementation of the Unit, add ready Modules and unload the sketch - <b>PROFIT !</b> 
+</p>
+<p>Example of a unit with two modules :</p>
+
 
 <pre>
 #include &lt;EthernetPUnit.h&gt;
@@ -29,9 +41,8 @@ void loop() {
 </pre>
 
 <br>
-<a href="http://www.youtube.com/watch?feature=player_embedded&v=cMK5AElEt_4
-" target="_blank"><img src="https://img.youtube.com/vi/cMK5AElEt_4/0.jpg" 
-alt="Arduino. Remote control via the Internet" width="480" height="360" border="10" /></a>
-<br>
-<img src="img/img0.jpg" title="Arduino and Ethernet"/>
-<img src="img/img1.jpg" title="Arduino and SIM900"/>
+
+<h2>Video</h2>
+<a href="http://www.youtube.com/watch?feature=player_embedded&v=cMK5AElEt_4" target="_blank">
+    <img src="https://img.youtube.com/vi/cMK5AElEt_4/0.jpg" align="center" alt="Arduino. Remote control via the Internet" width="480" height="360" border="1" />
+</a>
