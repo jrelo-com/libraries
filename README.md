@@ -1,5 +1,5 @@
 <a target="_blank" href="https://jrelo.com"><img src="img/logo-lg.png" title="jrelo"></a> 
-<h3>Jrelo - Hybrid Message Broker (Hybrid Message Queue)</h3>
+<h3>Jrelo - Remote Control Service</h3>
 <br>
 <h1 align="center">Get control of the Arduino over the Internet with Jrelo.</h1>
 <h3 align="center">
@@ -11,7 +11,7 @@
 
 <h2>Usage</h2>
 <p>
-    Select the appropriate implementation of the Unit, add ready Modules and unload the sketch - <b>PROFIT !</b> 
+   Select the appropriate implementation of the Unit, add ready-made modules and upload a sketch - <b>PROFIT !</b> 
 </p>
 <p>Example of a unit with two modules :</p>
 
